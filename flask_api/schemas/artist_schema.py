@@ -1,4 +1,4 @@
-"""This module contains artist schema."""
+"""This module contains the artist schema."""
 
 from ..app import ma
 from ..models import Artist
