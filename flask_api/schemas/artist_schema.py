@@ -13,7 +13,7 @@ class ArtistSchema(ma.SQLAlchemySchema):
     id = ma.auto_field()
     name = ma.auto_field()
     bio = ma.auto_field()
-    website = ma.auto_field()
+    website = ma.Url()
     performances = ma.List(ma.HyperlinkRelated("performances"))
     image = ma.HyperlinkRelated("images/<int:id>")
 

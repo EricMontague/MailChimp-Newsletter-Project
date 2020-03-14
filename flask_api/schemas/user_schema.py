@@ -12,7 +12,7 @@ class UserSchema(ma.SQLAlchemySchema):
 
     id = ma.auto_field()
     username = ma.auto_field()
-    email = ma.auto_field()
+    email = ma.Email()
     password_hash = ma.auto_field()
 
     _links = ma.Hyperlinks(
