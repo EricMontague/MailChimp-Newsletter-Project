@@ -3,6 +3,7 @@
 
 from ..app import ma
 from ..models import Image
+from marshmallow import post_load, ValidationError, validate
 
 
 class ImageSchema(ma.SQLAlchemySchema):
@@ -11,10 +12,17 @@ class ImageSchema(ma.SQLAlchemySchema):
     class Meta:
         model = Image
 
-    id = ma.auto_field()
-    path = ma.auto_field()
-    artist = ma.HyperlinkRelated("artists/<int:id>")
+    id = ma.auto_field(dump_only=True)
+    path = ma.auto_field(required=True)
+    artist = ma.HyperlinkRelated("artist")
 
-    _links = ma.Hyperlink(
-        "uri": ma.URLFor("images", id="<int:id>"), "collection": ma.URLFor("images")
-    )
+    _links = ma.Hyperlinks({
+        "uri": ma.URLFor("image", id="<id>"), "collection": ma.URLFor("image_list")
+    })
+
+    @post_load
+    def make_object(self, data, **kwargs):
+        """Return an image object from the validated data."""
+        if data is None:
+            raise ValidationError("No data was provided")
+        return Image(**data)

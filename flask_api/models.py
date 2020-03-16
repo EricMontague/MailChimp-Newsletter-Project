@@ -37,7 +37,7 @@ class Artist(db.Model):
 
     __tablename__ = "artists"
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(64), nullable=False)
+    name = db.Column(db.String(64), unique=True, nullable=False)
     bio = db.Column(db.Text(), nullable=True)
     website = db.Column(db.Text(), unique=True, nullable=True)
     performances = db.relationship(
@@ -52,7 +52,7 @@ class Artist(db.Model):
 
     def __repr__(self):
         """Return a string representation of the model."""
-        return "<Artist: %r %r>" %(self.first_name, self.last_name)
+        return "<Artist: %r>" %(self.name)
 
 
 class Performance(db.Model):
