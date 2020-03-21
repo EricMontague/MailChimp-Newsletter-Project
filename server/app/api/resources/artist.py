@@ -48,7 +48,7 @@ class ArtistAPI(Resource):
         return "", HTTPStatus.NO_CONTENT
 
 
-class ArtistListAPIAPI(Resource):
+class ArtistListAPI(Resource):
     """Class to represent a collection of artist resources."""
     
     def __init__(self, **kwargs):

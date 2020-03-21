@@ -49,7 +49,7 @@ class PerformanceAPI(Resource):
         return "", HTTPStatus.NO_CONTENT
 
 
-class PerformanceListAPIAPI(Resource):
+class PerformanceListAPI(Resource):
     """Class to represent the collection of performance resources."""
 
     def __init__(self, **kwargs):

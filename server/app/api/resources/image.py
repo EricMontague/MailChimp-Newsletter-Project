@@ -46,7 +46,7 @@ class ImageAPI(Resource):
         return "", HTTPStatus.NO_CONTENT
         
 
-class ImageListAPIAPI(Resource):
+class ImageListAPI(Resource):
     """Class to represent a collection of image resources."""
 
     def __init__(self, **kwargs):

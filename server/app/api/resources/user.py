@@ -9,6 +9,7 @@ from app.extensions import db
 from http import HTTPStatus
 
 
+#these classes will be used later when I add a front end to this project
 class UserAPI(Resource):
     """Class to represent a single user resource."""
     
@@ -48,7 +49,7 @@ class UserAPI(Resource):
         return "", HTTPStatus.NO_CONTENT
 
 
-class UserListAPIAPI(Resource):
+class UserListAPI(Resource):
     """Class to represent a collection of user resources."""
     
     def __init__(self, **kwargs):
@@ -57,17 +58,5 @@ class UserListAPIAPI(Resource):
     def get(self):
         """Return all user resources."""
         users = User.query.all()
-        return self._schema.dump(users, many=True), HTTPStatus.OK
-
-    def post(self):
-        """Create a new user resource."""
-        json_data = request.get_json()
-        try:
-            user = self._schema.load(json_data)
-        except ValidationError as err:
-            return {"message": err.messages}, HTTPStatus.BAD_REQUEST
-        db.session.add(user)
-        db.session.commit()
-        return self._schema.dump(user), HTTPStatus.CREATED
-        
+        return self._schema.dump(users, many=True), HTTPStatus.OK        
     

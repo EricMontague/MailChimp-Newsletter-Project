@@ -1,8 +1,10 @@
 """This module contains all of the endpoints for the api."""
 
 
-from flask import Blueprint
+from http import HTTPStatus
+from flask import Blueprint, jsonify
 from flask_restful import Api
+from flask_jwt_extended import verify_jwt_in_request
 from .resources import (
     ArtistAPI,
     ArtistListAPI,
@@ -26,6 +28,17 @@ from .schemas import (
 #Instantiate Blueprint and Api objects
 api_blueprint = Blueprint("api", __name__, url_prefix="/api/v1")
 api = Api(api_blueprint)
+
+
+@api_blueprint.before_request
+def before_request():
+    """Ensure that a user has a valid access token before each
+    request in this blueprint.
+    """
+    try:
+        verify_jwt_in_request()
+    except:
+        return jsonify({"message": "Access token is invalid or expired"}), HTTPStatus.UNAUTHORIZED
 
 
 #artist resources

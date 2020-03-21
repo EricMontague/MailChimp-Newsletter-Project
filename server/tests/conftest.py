@@ -6,9 +6,21 @@ from app import create_app
 
 
 @pytest.fixture
-def flask_app():
-    """Fixture for the application instance."""
+def flask_app_testing():
+    """Fixture for the application instance with testing configurations."""
     app = create_app(config_name="testing")
+    from app.extensions import db
+
+    with app.app_context():
+        db.create_all()
+        yield app
+        db.drop_all()
+
+
+@pytest.fixture
+def flask_app_development():
+    """Fixture for the application instance with development configurations."""
+    app = create_app(config_name="development")
     from app.extensions import db
 
     with app.app_context():

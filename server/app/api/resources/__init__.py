@@ -1,6 +1,6 @@
-from .artist_resource import ArtistAPI, ArtistListAPI
-from .image_resource import ImageAPI, ImageListAPI
-from .performance_resource import PerformanceAPI, PerformanceListAPI
-from .venue_resource import VenueAPI, VenueListAPI
-from .user_resource import UserAPI, UserListAPI
+from .artist import ArtistAPI, ArtistListAPI
+from .image import ImageAPI, ImageListAPI
+from .performance import PerformanceAPI, PerformanceListAPI
+from .venue import VenueAPI, VenueListAPI
+from .user import UserAPI, UserListAPI
 

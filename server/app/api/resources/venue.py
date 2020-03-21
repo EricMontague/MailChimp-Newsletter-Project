@@ -50,7 +50,7 @@ class VenueAPI(Resource):
         return "", HTTPStatus.NO_CONTENT
 
 
-class VenueListAPIAPI(Resource):
+class VenueListAPI(Resource):
     """Class to represent a collection of venue resources."""
     
     def __init__(self, **kwargs):

@@ -4,28 +4,24 @@
 import os
 
 
-basedir = os.path.abspath(os.path.dirname(__file__))
+PROJECT_ROOT = os.path.abspath(os.path.dirname(__file__))
 
 
 class BaseConfig:
     """Base class for application configuration"""
 
-    SECRET_KEY = os.environ.get("SECRET KEY", "fake key for development only")
+    SECRET_KEY = "fake key for development only"
+    JWT_IDENTITY_CLAIM = "sub"
+    JWT_ERROR_MESSAGE_KEY = "message"
+    JWT_ACCESS_TOKEN_EXPIRES = 1800
+    DB_USER = "ericmontague"
+    DB_PASSWORD = "password"
+    DB_NAME = "mailchimp_project"
+    DB_HOST = "localhost"
+    DB_PORT = 5432
+    SQLALCHEMY_DATABASE_URI = f"postgresql://{DB_USER}:{DB_PASSWORD}@{DB_HOST}:{DB_PORT}/{DB_NAME}"
+    CSRF_ENABLED = True #check later to see if this is really needed
     SQLALCHEMY_TRACK_MODIFICATIONS = False
-
-    # POSTGRESQL
-    # DB_USER = 'user'
-    # DB_PASSWORD = 'password'
-    # DB_NAME = 'restplusdb'
-    # DB_HOST = 'localhost'
-    # DB_PORT = 5432
-    # SQLALCHEMY_DATABASE_URI = 'postgresql://{user}:{password}@{host}:{port}/{name}'.format(
-    #     user=DB_USER,
-    #     password=DB_PASSWORD,
-    #     host=DB_HOST,
-    #     port=DB_PORT,
-    #     name=DB_NAME,
-    # )
 
     @staticmethod
     def init_app(app):
@@ -36,27 +32,22 @@ class DevelopmentConfig(BaseConfig):
     """Class to setup the development configuration for the application"""
 
     DEBUG = True
-    SQLALCHEMY_DATABASE_URI = os.environ.get(
-        "DEV_DATABASE_URL"
-    ) or "sqlite:///" + os.path.join(basedir, "data-dev.sqlite")
-
+ 
 
 class TestingConfig(BaseConfig):
     """Class to setup the testing configuration for the application"""
+
     TESTING = True
-    WTF_CSRF_ENABLED = False
-    SQLALCHEMY_DATABASE_URI = os.environ.get("TEST_DATABASE_URL") or "sqlite://"
+    SQLALCHEMY_DATABASE_URI = "sqlite://"
 
 
 class ProductionConfig(BaseConfig):
     """Class to setop the production configuration for the application"""
 
-    SQLALCHEMY_DATABASE_URI = os.environ.get(
-        "DATABASE_URL"
-    ) or "sqlite:///" + os.path.join(basedir, "data.sqlite")
+    SECRET_KEY = os.environ.get("SECRET_KEY")
 
 
-config = {
+CONFIG_NAME_MAPPER = {
     "development": DevelopmentConfig,
     "testing": TestingConfig,
     "production": ProductionConfig,
