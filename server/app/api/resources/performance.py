@@ -6,6 +6,7 @@ from marshmallow import ValidationError
 from app.models import Performance
 from app.extensions import db
 from http import HTTPStatus
+from app.api.helpers import paginate
 
 
 class PerformanceAPI(Resource):
@@ -57,8 +58,7 @@ class PerformanceListAPI(Resource):
 
     def get(self):
         """Return the collection of performance resources."""
-        performances = Performance.query.all()
-        return self._schema.dump(performances, many=True), HTTPStatus.OK
+        return paginate(Performance, self._schema), HTTPStatus.OK
 
     def post(self):
         """Create a new performance resource."""

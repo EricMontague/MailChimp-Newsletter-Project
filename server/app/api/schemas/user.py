@@ -17,7 +17,7 @@ class UserSchema(ma.SQLAlchemySchema):
     password = ma.Str(required=True, validate=validate.Length(8, 128), load_only=True)
 
     _links = ma.Hyperlinks({
-        "uri": ma.URLFor("user", id="<id>"), "collection": ma.URLFor("user_list")
+        "uri": ma.URLFor("api.user", user_id="<id>"), "collection": ma.URLFor("api.user_list")
     })
 
     @post_load

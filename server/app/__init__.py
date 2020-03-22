@@ -29,3 +29,4 @@ def register_blueprints(app):
     from .api.views import api_blueprint
     from .auth.views import auth_blueprint
     app.register_blueprint(api_blueprint)
+    app.register_blueprint(auth_blueprint)

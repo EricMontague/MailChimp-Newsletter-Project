@@ -2,7 +2,7 @@
 
 
 from http import HTTPStatus
-from flask import request, jsonify
+from flask import request
 from flask_restful import Resource
 from app.extensions import db
 from app.models import User
@@ -22,14 +22,23 @@ class RegisterAPI(Resource):
         try:
             new_user = self._schema.load(json_data)
         except ValidationError as err:
+            print("*********")
+            print("Validation error")
+            print("*********")
             return {"message": err.messages}, HTTPStatus.BAD_REQUEST
         #check for an existing user
-        existing_user = User.query.get(new_user.id)
+        existing_user = User.query.filter_by(username=new_user.username).first()
         if existing_user is not None:
+            print("*********")
+            print("User already registered")
+            print("*********")
             return {"message": "User already registered"}, HTTPStatus.ACCEPTED
         db.session.add(new_user)
         db.session.commit()
 
         #create acesss token
+        print("*********")
+        print("Creating token")
+        print("*********")
         access_token = create_access_token(identity=new_user.id)
-        return jsonify({"access_token": access_token}), HTTPStatus.CREATED
+        return {"access_token": access_token}, HTTPStatus.CREATED

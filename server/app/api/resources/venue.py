@@ -7,6 +7,7 @@ from marshmallow import ValidationError
 from app.models import Venue
 from app.extensions import db
 from http import HTTPStatus
+from app.api.helpers import paginate
 
 
 class VenueAPI(Resource):
@@ -58,8 +59,7 @@ class VenueListAPI(Resource):
 
     def get(self):
         """Return all venue resources."""
-        venues = Venue.query.all()
-        return self._schema.dump(venues, many=True), HTTPStatus.OK
+        return paginate(Venue, self._schema), HTTPStatus.OK
 
     def post(self):
         """Create a new venue resource."""

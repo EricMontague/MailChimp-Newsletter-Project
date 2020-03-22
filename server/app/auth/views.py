@@ -7,18 +7,18 @@ from http import HTTPStatus
 from flask import Blueprint
 from flask_restful import Api
 from .resources import LoginAPI, RegisterAPI
-from app.schemas import UserSchema
+from app.api.schemas import UserSchema
 
 
-auth = Blueprint("auth", __name__, url_prefix="/auth")
-api = Api(auth)
+auth_blueprint = Blueprint("auth", __name__, url_prefix="/auth")
+api = Api(auth_blueprint)
 
 
 api.add_resource(LoginAPI, "/login", endpoint="login")
 api.add_resource(
     RegisterAPI, "/register",
     resource_class_kwargs={"schema": UserSchema()},
-    endpoiint="register"
+    endpoint="register"
 )
 
 

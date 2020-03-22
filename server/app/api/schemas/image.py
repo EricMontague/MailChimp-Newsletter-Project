@@ -17,7 +17,7 @@ class ImageSchema(ma.SQLAlchemySchema):
     artist = ma.HyperlinkRelated("artist")
 
     _links = ma.Hyperlinks({
-        "uri": ma.URLFor("image", id="<id>"), "collection": ma.URLFor("image_list")
+        "uri": ma.URLFor("image", image_id="<id>"), "collection": ma.URLFor("image_list")
     })
 
     @post_load

@@ -7,6 +7,7 @@ from marshmallow import ValidationError
 from app.models import Image
 from app.extensions import db
 from http import HTTPStatus
+from app.api.helpers import paginate
 
 
 class ImageAPI(Resource):
@@ -54,8 +55,7 @@ class ImageListAPI(Resource):
 
     def get(self):
         """Return all image resources."""
-        images = Image.query.all()
-        return self._schema.dump(images, many=True), HTTPStatus.OK
+        return paginate(Image, self._schema), HTTPStatus.OK
 
     def post(self):
         """Create a new image resource."""

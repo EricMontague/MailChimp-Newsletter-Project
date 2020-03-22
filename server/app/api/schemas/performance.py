@@ -23,7 +23,7 @@ class PerformanceSchema(ma.SQLAlchemySchema):
     venue = ma.HyperlinkRelated("venue")
 
     _links = ma.Hyperlinks({
-        "uri": ma.URLFor("performance", id="<id>"), "collection": ma.URLFor("performance_list")
+        "uri": ma.URLFor("performance", performance_id="<id>"), "collection": ma.URLFor("performance_list")
     })
 
     @post_load

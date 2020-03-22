@@ -7,6 +7,7 @@ from marshmallow import ValidationError
 from app.models import User
 from app.extensions import db
 from http import HTTPStatus
+from app.api.helpers import paginate
 
 
 #these classes will be used later when I add a front end to this project
@@ -57,6 +58,5 @@ class UserListAPI(Resource):
 
     def get(self):
         """Return all user resources."""
-        users = User.query.all()
-        return self._schema.dump(users, many=True), HTTPStatus.OK        
+        return paginate(User, self._schema), HTTPStatus.OK        
     

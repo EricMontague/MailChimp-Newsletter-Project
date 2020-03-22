@@ -16,7 +16,7 @@ class BaseConfig:
     JWT_ACCESS_TOKEN_EXPIRES = 1800
     DB_USER = "ericmontague"
     DB_PASSWORD = "password"
-    DB_NAME = "mailchimp_project"
+    DB_NAME = "mailchimp"
     DB_HOST = "localhost"
     DB_PORT = 5432
     SQLALCHEMY_DATABASE_URI = f"postgresql://{DB_USER}:{DB_PASSWORD}@{DB_HOST}:{DB_PORT}/{DB_NAME}"

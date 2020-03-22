@@ -1,12 +1,13 @@
 """This module contains the artist resource."""
 
 
+from http import HTTPStatus
 from flask import request
 from flask_restful import Resource
 from marshmallow import ValidationError
 from app.models import Artist
 from app.extensions import db
-from http import HTTPStatus
+from app.api.helpers import paginate
 
 
 class ArtistAPI(Resource):
@@ -19,7 +20,7 @@ class ArtistAPI(Resource):
         """Return a single artist resource."""
         artist = Artist.query.get(artist_id)
         if artist is None:
-            return {"message": "Artist could not be found"}, 
+            return {"message": "Artist could not be found"}, HTTPStatus.NOT_FOUND
         return self._schema.dump(artist), HTTPStatus.OK
 
     def put(self, artist_id):
@@ -56,9 +57,8 @@ class ArtistListAPI(Resource):
 
     def get(self):
         """Return all artist resources."""
-        artists = Artist.query.all()
-        return self._schema.dump(artists, many=True), HTTPStatus.OK
-
+        return paginate(Artist, self._schema), HTTPStatus.OK
+        
     def post(self):
         """Create a new artist resource."""
         json_data = request.get_json()
