@@ -11,7 +11,7 @@ class Artist(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(64), unique=True, nullable=False)
     bio = db.Column(db.Text(), nullable=True)
-    website = db.Column(db.Text(), unique=True, nullable=True)
+    website = db.Column(db.Text(), nullable=True)
     performances = db.relationship(
         "Performance", 
         backref="artist", 
