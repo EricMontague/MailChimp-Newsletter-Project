@@ -38,7 +38,7 @@ def before_request():
     try:
         verify_jwt_in_request()
     except:
-        return jsonify({"message": "Access token is invalid or expired"}), HTTPStatus.UNAUTHORIZED
+        return jsonify({"message": "Access token is invalid or expired."}), HTTPStatus.UNAUTHORIZED
 
 
 #artist resources
