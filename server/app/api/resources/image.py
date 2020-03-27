@@ -20,7 +20,7 @@ class ImageAPI(Resource):
         """Return a single image resource."""
         image = Image.query.get(image_id)
         if image is None:
-            return {"message": "Image not found"}, HTTPStatus.NOT_FOUND
+            return {"message": "Image not found."}, HTTPStatus.NOT_FOUND
         return self._schema.dump(image), HTTPStatus.OK
 
     def put(self, image_id):
@@ -29,10 +29,10 @@ class ImageAPI(Resource):
         try:
             updated_image = self._schema.load(json_data)
         except ValidationError as err:
-            return {"message": err.message}, HTTPStatus.BAD_REQUEST
+            return {"message": err.messages}, HTTPStatus.BAD_REQUEST
         image = Image.query.get(image_id)
         if image is None:
-            return {"message": "Image not found"}, HTTPStatus.NOT_FOUND
+            return {"message": "Image not found."}, HTTPStatus.NOT_FOUND
         image.path = updated_image.path
         db.session.commit()
         return self._schema.dump(image), HTTPStatus.NO_CONTENT
@@ -41,7 +41,7 @@ class ImageAPI(Resource):
         """Delete a single image resource."""
         image = Image.query.get(image_id)
         if image is None:
-            return {"message": "Image not found"}, HTTPStatus.NOT_FOUND
+            return {"message": "Image not found."}, HTTPStatus.NOT_FOUND
         db.session.delete(image)
         db.session.commit()
         return "", HTTPStatus.NO_CONTENT
@@ -63,7 +63,7 @@ class ImageListAPI(Resource):
         try:
             image = self._schema.load(json_data)
         except ValidationError as err:
-            return {"message": err.message}, HTTPStatus.BAD_REQUEST
+            return {"message": err.messages}, HTTPStatus.BAD_REQUEST
         db.session.add(image)
         db.session.commit()
         return self._schema.dump(image), HTTPStatus.CREATED

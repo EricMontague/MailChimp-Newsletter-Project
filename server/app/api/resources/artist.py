@@ -20,7 +20,7 @@ class ArtistAPI(Resource):
         """Return a single artist resource."""
         artist = Artist.query.get(artist_id)
         if artist is None:
-            return {"message": "Artist could not be found"}, HTTPStatus.NOT_FOUND
+            return {"message": "Artist could not be found."}, HTTPStatus.NOT_FOUND
         return self._schema.dump(artist), HTTPStatus.OK
 
     def put(self, artist_id):
@@ -29,21 +29,21 @@ class ArtistAPI(Resource):
         try:
             updated_artist = self._schema.load(json_data)
         except ValidationError as err:
-            return {"message": err.message}, HTTPStatus.BAD_REQUEST
+            return {"message": err.messages}, HTTPStatus.BAD_REQUEST
         artist = Artist.query.get(artist_id)
         if artist is None:
-            return {"message": "Artist could not be found"}, HTTPStatus.NOT_FOUND
+            return {"message": "Artist could not be found."}, HTTPStatus.NOT_FOUND
         artist.name = updated_artist.name
         artist.bio = updated_artist.bio
         artist.website = updated_artist.website
         db.session.commit()
-        return self._schema.dump(artist), HTTPStatus.NO_CONTENT
+        return "", HTTPStatus.NO_CONTENT
 
     def delete(self, artist_id):
         """Delete a single artist resource."""
         artist = Artist.query.get(artist_id)
         if artist is None:
-            return {"message": "Artist could not be found"}, HTTPStatus.NOT_FOUND
+            return {"message": "Artist could not be found."}, HTTPStatus.NOT_FOUND
         db.session.delete(artist)
         db.session.commit()
         return "", HTTPStatus.NO_CONTENT
@@ -63,11 +63,14 @@ class ArtistListAPI(Resource):
         """Create a new artist resource."""
         json_data = request.get_json()
         try:
-            artist = self._schema.load(json_data)
+            new_artist = self._schema.load(json_data)
         except ValidationError as err:
             return {"message": err.messages}, HTTPStatus.BAD_REQUEST
-        db.session.add(artist)
+        existing_artist = Artist.query.filter_by(name=new_artist.name).first()
+        if existing_artist is not None:
+            return {"message": "Artist already exists."}, HTTPStatus.CONFLICT
+        db.session.add(new_artist)
         db.session.commit()
-        return self._schema.dump(artist), HTTPStatus.CREATED
+        return self._schema.dump(new_artist), HTTPStatus.CREATED
         
         

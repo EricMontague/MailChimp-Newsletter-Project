@@ -20,7 +20,7 @@ class VenueAPI(Resource):
         """Return a single venue resource."""
         venue = Venue.query.get(venue_id)
         if venue is None:
-            return {"message": "Venue could not be found"}, HTTPStatus.NOT_FOUND
+            return {"message": "Venue could not be found."}, HTTPStatus.NOT_FOUND
         return self._schema.dump(venue), HTTPStatus.OK
 
     def put(self, venue_id):
@@ -32,7 +32,7 @@ class VenueAPI(Resource):
             return {"message": err.message}, HTTPStatus.BAD_REQUEST
         venue = Venue.query.get(venue_id)
         if venue is None:
-            return {"message": "Venue could not be found"}, HTTPStatus.NOT_FOUND
+            return {"message": "Venue could not be found."}, HTTPStatus.NOT_FOUND
         venue.name = updated_venue.name
         venue.street_address = updated_venue.street_address
         venue.city = updated_venue.city
@@ -45,7 +45,7 @@ class VenueAPI(Resource):
         """Delete a single venue resource."""
         venue = Venue.query.get(venue_id)
         if venue is None:
-            return {"message": "Venue could not be found"}, HTTPStatus.NOT_FOUND
+            return {"message": "Venue could not be found."}, HTTPStatus.NOT_FOUND
         db.session.delete(venue)
         db.session.commit()
         return "", HTTPStatus.NO_CONTENT

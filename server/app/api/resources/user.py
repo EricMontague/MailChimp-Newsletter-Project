@@ -21,7 +21,7 @@ class UserAPI(Resource):
         """Return a single user resource."""
         user = User.query.get(user_id)
         if user is None:
-            return {"message": "User could not be found"}, HTTPStatus.NOT_FOUND
+            return {"message": "User could not be found."}, HTTPStatus.NOT_FOUND
         return self._schema.dump(user), HTTPStatus.OK
 
     def put(self, user_id):
@@ -30,10 +30,10 @@ class UserAPI(Resource):
         try:
             updated_user = self._schema.load(json_data)
         except ValidationError as err:
-            return {"message": err.message}, HTTPStatus.BAD_REQUEST
+            return {"message": err.messages}, HTTPStatus.BAD_REQUEST
         user = User.query.get(user_id)
         if user is None:
-            return {"message": "User could not be found"}, HTTPStatus.NOT_FOUND
+            return {"message": "User could not be found."}, HTTPStatus.NOT_FOUND
         user.username = updated_user.username
         user.email = updated_user.email
         user.password_hash = updated_user.password_hash
@@ -44,7 +44,7 @@ class UserAPI(Resource):
         """Delete a single user resource."""
         user = User.query.get(user_id)
         if user is None:
-            return {"message": "User could not be found"}, HTTPStatus.NOT_FOUND
+            return {"message": "User could not be found."}, HTTPStatus.NOT_FOUND
         db.session.delete(user)
         db.session.commit()
         return "", HTTPStatus.NO_CONTENT
