@@ -13,17 +13,15 @@ class LoginAPI(Resource):
 
     def post(self):
         """Authenticate user and return a JWT to the client."""
-        if not request.is_json:
-            return {"message": "Missing JSON in request"}, HTTPStatus.BAD_REQUEST
         username = request.json.get("username", None)
         password = request.json.get("password", None)
-        if username is None and password is None:
-            return {"message": "Missing username or password"}, HTTPStatus.UNAUTHORIZED
+        if username is None or password is None:
+            return {"message": "Missing username or password."}, HTTPStatus.UNAUTHORIZED
             
         #verify username and password
         user = User.query.filter_by(username=username).first()
         if user is None or not user.verify_password(password):
-            return {"message": "Bad credentials"}, HTTPStatus.UNAUTHORIZED
+            return {"message": "Bad credentials."}, HTTPStatus.UNAUTHORIZED
         
         #create access and refresh tokens
         access_token = create_access_token(identity=user.id)
