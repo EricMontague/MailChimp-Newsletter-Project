@@ -24,27 +24,18 @@ def test_create_app_with_non_existing_config():
         create_app("wrong_config_name")
 
 
-def test_app_is_development(flask_app_development):
-    """Test that the correct configurations
-    are set when the app is configured for
-    development.
-    """
-    assert flask_app_development.config["DEBUG"] is True
-    assert flask_app_development.config["SECRET_KEY"] == "fake key for development only"
-    assert flask_app_development.config["JWT_SECRET_KEY"] == "another fake key for development only"
-    assert flask_app_development.config["SQLALCHEMY_DATABASE_URI"] == (
-        f"postgresql://ericmontague:password@localhost:5432/mailchimp_project"
-    )
-
-
-def test_app_is_testing(flask_app_testing):
+def test_app_is_testing(flask_app):
     """Test that the correct configurations
     are set when the app is configured for
     testing.
     """
-    assert flask_app_testing.config["TESTING"] is True
-    assert flask_app_development.config["SECRET_KEY"] == "fake key for development only"
-    assert flask_app_development.config["JWT_SECRET_KEY"] == "another fake key for development only"
-    assert flask_app_testing.config["SQLALCHEMY_DATABASE_URI"] == "sqlite://"
+    assert flask_app.config["TESTING"] is True
+    assert flask_app.config["CSRF_ENABLED"] is True
+    assert flask_app.config["JWT_IDENTITY_CLAIM"] == "sub"
+    assert flask_app.config["JWT_ERROR_MESSAGE_KEY"] == "message"
+    assert flask_app.config["JWT_ACCESS_TOKEN_EXPIRES"] == 1800
+    assert flask_app.config["SECRET_KEY"] == "fake key for development only"
+    assert flask_app.config["SQLALCHEMY_DATABASE_URI"] == "sqlite://"
+    assert flask_app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] is False
 
 
