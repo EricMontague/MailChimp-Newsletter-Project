@@ -14,10 +14,10 @@ class ImageSchema(ma.SQLAlchemySchema):
 
     id = ma.auto_field(dump_only=True)
     path = ma.auto_field(required=True)
-    artist = ma.HyperlinkRelated("artist")
+    artist = ma.HyperlinkRelated("api.artist")
 
     _links = ma.Hyperlinks({
-        "uri": ma.URLFor("image", image_id="<id>"), "collection": ma.URLFor("image_list")
+        "uri": ma.URLFor("api.image", image_id="<id>"), "collection": ma.URLFor("api.image_list")
     })
 
     @post_load

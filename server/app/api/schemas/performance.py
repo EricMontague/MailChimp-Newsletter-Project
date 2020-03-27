@@ -1,7 +1,6 @@
 """This module contains the performance schema."""
 
 
-import datetime as dt
 from app.extensions import ma
 from app.models import Performance
 from marshmallow import post_load, ValidationError, validate, validates_schema
@@ -19,11 +18,11 @@ class PerformanceSchema(ma.SQLAlchemySchema):
     url = ma.Url(required=True)
     start_datetime = ma.auto_field(required=True) #iso format by default
     end_datetime = ma.auto_field(required=True) #iso format by default
-    artist = ma.HyperlinkRelated("artist")
-    venue = ma.HyperlinkRelated("venue")
+    artist = ma.HyperlinkRelated("api.artist")
+    venue = ma.HyperlinkRelated("api.venue")
 
     _links = ma.Hyperlinks({
-        "uri": ma.URLFor("performance", performance_id="<id>"), "collection": ma.URLFor("performance_list")
+        "uri": ma.URLFor("api.performance", performance_id="<id>"), "collection": ma.URLFor("api.performance_list")
     })
 
     @post_load
