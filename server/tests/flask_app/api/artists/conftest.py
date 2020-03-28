@@ -17,7 +17,5 @@ def artist(db):
     )
     db.session.add(artist)
     db.session.commit()
-    yield artist
+    return artist
 
-    #Cleanup
-    db.session.delete(artist)

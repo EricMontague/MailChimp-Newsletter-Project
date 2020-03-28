@@ -9,16 +9,22 @@ def test_getting_single_artist_by_authorized_user(flask_test_client, token, arti
     """Test to ensure that a single artist resource can be
     successfully retrieved.
     """
+    expected_fields = {
+        "id", "name", "bio", "website", "performances", "image", "_links"
+    }
     response = flask_test_client.get(
         f"/api/v1/artists/{artist.id}",
         headers=get_headers(token)
     )
     assert response.status == "200 OK"
     assert response.content_type == "application/json"
-    assert set(response.json.keys()) == {"id", "name", "bio", "website", "performances", "image", "_links"}
+    assert set(response.json.keys()) == expected_fields
+    assert response.json["id"] == artist.id
     assert response.json["name"] == artist.name
     assert response.json["bio"] == artist.bio
     assert response.json["website"] == artist.website
+    assert response.json["performances"] == artist.performances.all()
+    assert response.json["image"] == artist.image
     assert response.json["_links"]["uri"] == f"/api/v1/artists/{artist.id}"
     assert response.json["_links"]["collection"] == "/api/v1/artists"
 
@@ -55,14 +61,17 @@ def test_getting_list_of_artists_by_authorized_user(flask_test_client, json, tok
     assert response.json["total"] == 1
     assert response.json["prev"] is None
     assert response.json["next"] is None
+    assert json.loads(response.json["artists"])[0]["id"] == artist.id
     assert json.loads(response.json["artists"])[0]["name"] == artist.name
     assert json.loads(response.json["artists"])[0]["bio"] == artist.bio
     assert json.loads(response.json["artists"])[0]["website"] == artist.website
+    assert json.loads(response.json["artists"])[0]["performances"] == artist.performances.all()
+    assert json.loads(response.json["artists"])[0]["image"] == artist.image
     assert json.loads(response.json["artists"])[0]["_links"]["uri"] == f"/api/v1/artists/{artist.id}"    
     assert json.loads(response.json["artists"])[0]["_links"]["collection"] == "/api/v1/artists"
 
 
-def test_getting_list_of_artist_without_token_must_fail(flask_test_client):
+def test_getting_list_of_artists_without_token_must_fail(flask_test_client):
     """Test to ensure that an unauthorized user (no token) cannot get
     artist resources
     """

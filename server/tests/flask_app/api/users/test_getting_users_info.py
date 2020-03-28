@@ -17,6 +17,7 @@ def test_getting_single_user_by_authorized_user(flask_test_client, token, user):
     assert response.status == "200 OK"
     assert response.content_type == "application/json"
     assert set(response.json.keys()) == expected_fields
+    assert response.json["id"] == user.id
     assert response.json["username"] == user.username
     assert response.json["email"] == user.email
     assert response.json.get("password") is None
@@ -55,6 +56,7 @@ def test_getting_list_of_users_by_authorized_user(flask_test_client, json, token
     assert response.json["total"] == 1
     assert response.json["prev"] is None
     assert response.json["next"] is None
+    assert json.loads(response.json["users"])[0]["id"] == user.id
     assert json.loads(response.json["users"])[0]["username"] == user.username
     assert json.loads(response.json["users"])[0]["email"] == user.email
     assert json.loads(response.json["users"])[0].get("password") is None
