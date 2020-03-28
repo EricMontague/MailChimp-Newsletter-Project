@@ -29,7 +29,7 @@ class VenueAPI(Resource):
         try:
             updated_venue = self._schema.load(json_data)
         except ValidationError as err:
-            return {"message": err.message}, HTTPStatus.BAD_REQUEST
+            return {"message": err.messages}, HTTPStatus.BAD_REQUEST
         venue = Venue.query.get(venue_id)
         if venue is None:
             return {"message": "Venue could not be found."}, HTTPStatus.NOT_FOUND
