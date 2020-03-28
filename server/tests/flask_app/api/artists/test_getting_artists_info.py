@@ -23,7 +23,7 @@ def test_getting_single_artist_by_authorized_user(flask_test_client, token, arti
     assert response.json["name"] == artist.name
     assert response.json["bio"] == artist.bio
     assert response.json["website"] == artist.website
-    assert response.json["performances"] == artist.performances
+    assert response.json["performances"] == artist.performances.all()
     assert response.json["image"] == artist.image
     assert response.json["_links"]["uri"] == f"/api/v1/artists/{artist.id}"
     assert response.json["_links"]["collection"] == "/api/v1/artists"
