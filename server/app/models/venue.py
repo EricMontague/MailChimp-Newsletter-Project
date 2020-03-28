@@ -9,7 +9,7 @@ class Venue(db.Model):
 
     __tablename__ = "venues"
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(64), unique=True, nullable=False)
+    name = db.Column(db.String(64), index=True, nullable=False)
     street_address = db.Column(db.String(64), unique=True, index=True, nullable=False)
     city = db.Column(db.String(64), nullable=False)
     state = db.Column(db.String(2), nullable=False)
