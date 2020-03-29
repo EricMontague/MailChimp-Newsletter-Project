@@ -5,11 +5,12 @@ from pytest import mark
 from flask_app.utils import get_headers
 
 
-def test_getting_single_user_by_authorized_user(flask_test_client, token, user):
+def test_getting_single_user_by_authorized_user(flask_test_client, auth, user):
     """Test to ensure that a single user resource can be
     successfully retrieved.
     """
     expected_fields = {"id", "username", "email", "_links"}
+    token = auth.register(user.username, "password", user.email)
     response = flask_test_client.get(
         f"/api/v1/users/{user.id}",
         headers=get_headers(token)
@@ -38,12 +39,13 @@ def test_getting_single_user_without_token_must_fail(flask_test_client, user):
     assert response.json["message"] == "Access token is invalid or expired."
 
 
-def test_getting_list_of_users_by_authorized_user(flask_test_client, json, token, user):
+def test_getting_list_of_users_by_authorized_user(flask_test_client, json, auth, user):
     """Test to ensure that a list of user resources can be
     successfully retrieved.
     """
     expected_fields = {"users", "prev", "next", "total"}
     expected_user_fields = {"id", "username", "email", "_links"}
+    token = auth.register(user.username, "password", user.email)
     response = flask_test_client.get(
         f"/api/v1/users",
         headers=get_headers(token)
@@ -77,10 +79,11 @@ def test_getting_list_of_users_without_token_must_fail(flask_test_client):
     assert response.json["message"] == "Access token is invalid or expired."
 
 
-def test_user_not_found(flask_test_client, token):
+def test_user_not_found(flask_test_client, auth, user):
     """Test to ensure that a 404 response is returned
     if a user resource does not exist.
     """
+    token = auth.register(user.username, "password", user.email)
     response = flask_test_client.get(
         f"/api/v1/users/100",
         headers=get_headers(token)

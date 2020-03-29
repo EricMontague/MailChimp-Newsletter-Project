@@ -6,7 +6,7 @@ from flask_app.utils import get_headers
 from app.models import User
 
 
-def test_update_user_info_with_valid_data(flask_test_client, token, db, user, json):
+def test_update_user_info_with_valid_data(flask_test_client, auth, db, user, json):
     """Test that a user resource can be succesfully updated
     when valid data is sent to the api.
     """
@@ -15,6 +15,7 @@ def test_update_user_info_with_valid_data(flask_test_client, token, db, user, js
         "password": "password",
         "email": "new_email@gmail.com"
     }
+    token = auth.register(user.username, "password", user.email)
     response = flask_test_client.put(
         f"/api/v1/users/{user.id}",
         headers=get_headers(token),
@@ -68,12 +69,13 @@ def test_update_user_info_with_valid_data(flask_test_client, token, db, user, js
         )
     ]
 )
-def test_update_user_info_with_invalid_data_must_fail(flask_test_client, token, 
+def test_update_user_info_with_invalid_data_must_fail(flask_test_client, auth, 
                                                         db, json, test_input, 
                                                         user, expected):
     """Test that a user resource cannot be updated
     if invalid data is passed to the api.
     """
+    token = auth.register(user.username, "password", user.email)
     response = flask_test_client.put(
         f"/api/v1/users/{user.id}",
         headers=get_headers(token),
@@ -88,7 +90,7 @@ def test_update_user_info_with_invalid_data_must_fail(flask_test_client, token,
         assert updated_user is None
 
 
-def test_update_user_id_must_fail(flask_test_client, token, json, user):
+def test_update_user_id_must_fail(flask_test_client, auth, json, user):
     """Test that a user's id cannot be updated."""
     updated_user_object = {
         "id": 1000,
@@ -96,6 +98,7 @@ def test_update_user_id_must_fail(flask_test_client, token, json, user):
         "password": "password",
         "email": user.email
     }
+    token = auth.register(user.username, "password", user.email)
     response = flask_test_client.put(
         f"/api/v1/users/{user.id}",
         headers=get_headers(token),
@@ -106,8 +109,9 @@ def test_update_user_id_must_fail(flask_test_client, token, json, user):
     assert response.json["message"]["id"] == ["Unknown field."]
 
 
-def test_delete_user(flask_test_client, token, user, db):
+def test_delete_user(flask_test_client, auth, user, db):
     """Test that a user resource can be successfully deleted."""
+    token = auth.register(user.username, "password", user.email)
     response = flask_test_client.delete(
         f"/api/v1/users/{user.id}",
         headers=get_headers(token)
@@ -120,11 +124,12 @@ def test_delete_user(flask_test_client, token, user, db):
     assert user is None
 
 
-def test_delete_user_not_found_must_fail(flask_test_client, token):
+def test_delete_user_not_found_must_fail(flask_test_client, auth, user):
     """Test that a 404 error is returned if
     a user with the given id does not
     exist.
     """
+    token = auth.register(user.username, "password", user.email)
     response = flask_test_client.delete(
         "/api/v1/users/100",
         headers=get_headers(token)
