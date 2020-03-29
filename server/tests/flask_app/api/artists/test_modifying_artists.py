@@ -6,7 +6,7 @@ from flask_app.utils import get_headers
 from app.models import Artist
 
 
-def test_create_new_artist_with_valid_data(flask_test_client, token, json, db):
+def test_create_new_artist_with_valid_data(flask_test_client, auth, user, json, db):
     """Test that a new artist resource can be succesfully created
     when valid data is sent to the api.
     """
@@ -18,7 +18,7 @@ def test_create_new_artist_with_valid_data(flask_test_client, token, json, db):
     expected_fields = {
         "id", "name", "bio", "website", "performances", "image", "_links"
     }
-
+    token = auth.register(user.username, "password", user.email)
     response = flask_test_client.post(
         "/api/v1/artists",
         headers=get_headers(token),
@@ -73,10 +73,11 @@ def test_create_new_artist_with_valid_data(flask_test_client, token, json, db):
         )
     ]
 )
-def test_create_new_artist_with_invalid_data_must_fail(flask_test_client, token, json, test_input, expected):
+def test_create_new_artist_with_invalid_data_must_fail(flask_test_client, auth, user, json, test_input, expected):
     """Test that a new artist resource cannot be created
     if invalid data is passed to the api.
     """
+    token = auth.register(user.username, "password", user.email)
     response = flask_test_client.post(
         "/api/v1/artists",
         headers=get_headers(token),
@@ -90,7 +91,7 @@ def test_create_new_artist_with_invalid_data_must_fail(flask_test_client, token,
     assert artist is None
 
 
-def test_create_new_artist_with_duplicate_name_must_fail(flask_test_client, token, artist, json):
+def test_create_new_artist_with_duplicate_name_must_fail(flask_test_client, auth, user, artist, json):
     """Test to ensure that a new artist can't be created
     with a duplicate name.
     """
@@ -99,6 +100,7 @@ def test_create_new_artist_with_duplicate_name_must_fail(flask_test_client, toke
         "bio": "test bio",
         "website": "http://www.uber.com"
     }
+    token = auth.register(user.username, "password", user.email)
     response = flask_test_client.post(
         "/api/v1/artists",
         headers=get_headers(token),
@@ -109,10 +111,11 @@ def test_create_new_artist_with_duplicate_name_must_fail(flask_test_client, toke
     assert response.content_type == "application/json"
     assert response.json["message"] == "Artist already exists."
 
+    #only the fixture should be in the database
     assert Artist.query.count() == 1
 
 
-def test_update_artist_info_with_valid_data(flask_test_client, token, db, artist, json):
+def test_update_artist_info_with_valid_data(flask_test_client, auth, user, db, artist, json):
     """Test that an artist resource can be succesfully updated
     when valid data is sent to the api.
     """
@@ -121,6 +124,7 @@ def test_update_artist_info_with_valid_data(flask_test_client, token, db, artist
         "bio": artist.bio,
         "website": artist.website
     }
+    token = auth.register(user.username, "password", user.email)
     response = flask_test_client.put(
         f"/api/v1/artists/{artist.id}",
         headers=get_headers(token),
@@ -156,12 +160,12 @@ def test_update_artist_info_with_valid_data(flask_test_client, token, db, artist
         )
     ]
 )
-def test_update_artist_info_with_invalid_data_must_fail(flask_test_client, token, 
-                                                        db, json, test_input, 
-                                                        artist, expected):
+def test_update_artist_info_with_invalid_data_must_fail(flask_test_client, auth, user, 
+                                                        db, json, test_input, artist, expected):
     """Test that an artist resource cannot be updated
     if invalid data is passed to the api.
     """
+    token = auth.register(user.username, "password", user.email)
     response = flask_test_client.put(
         f"/api/v1/artists/{artist.id}",
         headers=get_headers(token),
@@ -189,10 +193,10 @@ def test_update_artist_info_with_invalid_data_must_fail(flask_test_client, token
         )
     ]
 )
-def test_update_artist_info_with_missing_field_must_fail(flask_test_client, token, 
-                                                        db, json, test_input, 
-                                                        artist, expected):
+def test_update_artist_info_with_missing_field_must_fail(flask_test_client, auth, user,
+                                                        db, json, test_input, artist, expected):
     """Test to ensure that a PUT request cannot be made with any missing fields."""
+    token = auth.register(user.username, "password", user.email)
     response = flask_test_client.put(
         f"/api/v1/artists/{artist.id}",
         headers=get_headers(token),
@@ -207,7 +211,7 @@ def test_update_artist_info_with_missing_field_must_fail(flask_test_client, toke
         assert updated_artist is None
 
 
-def test_update_artist_id_must_fail(flask_test_client, token, json, artist):
+def test_update_artist_id_must_fail(flask_test_client, auth, user, json, artist):
     """Test that a artist's id cannot be updated."""
     updated_artist_object = {
         "id": 1000,
@@ -215,6 +219,7 @@ def test_update_artist_id_must_fail(flask_test_client, token, json, artist):
         "bio": artist.bio,
         "website": artist.website
     }
+    token = auth.register(user.username, "password", user.email)
     response = flask_test_client.put(
         f"/api/v1/artists/{artist.id}",
         headers=get_headers(token),
@@ -225,8 +230,9 @@ def test_update_artist_id_must_fail(flask_test_client, token, json, artist):
     assert response.json["message"]["id"] == ["Unknown field."]
 
 
-def test_delete_artist(flask_test_client, token, artist, db):
+def test_delete_artist(flask_test_client, auth, user, artist, db):
     """Test that an artist resource can be successfully deleted."""
+    token = auth.register(user.username, "password", user.email)
     response = flask_test_client.delete(
         f"/api/v1/artists/{artist.id}",
         headers=get_headers(token)
@@ -235,15 +241,16 @@ def test_delete_artist(flask_test_client, token, artist, db):
     assert response.content_type == "application/json"
     assert response.get_data(as_text=True) == ""
 
-    artist = Artist.query.get(artist.id)
-    assert artist is None
+    artist_object = Artist.query.get(artist.id)
+    assert artist_object is None
 
 
-def test_delete_artist_not_found_must_fail(flask_test_client, token):
+def test_delete_artist_not_found_must_fail(flask_test_client, auth, user):
     """Test that a 404 error is returned if
     an artist with the given id does not
     exist.
     """
+    token = auth.register(user.username, "password", user.email)
     response = flask_test_client.delete(
         "/api/v1/artists/100",
         headers=get_headers(token)

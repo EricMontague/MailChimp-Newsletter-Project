@@ -5,13 +5,14 @@ from pytest import mark
 from flask_app.utils import get_headers
 
 
-def test_getting_single_artist_by_authorized_user(flask_test_client, token, artist):
+def test_getting_single_artist_by_authorized_user(flask_test_client, auth, user, artist):
     """Test to ensure that a single artist resource can be
     successfully retrieved.
     """
     expected_fields = {
         "id", "name", "bio", "website", "performances", "image", "_links"
     }
+    token = auth.register(user.username, "password", user.email)
     response = flask_test_client.get(
         f"/api/v1/artists/{artist.id}",
         headers=get_headers(token)
@@ -23,8 +24,8 @@ def test_getting_single_artist_by_authorized_user(flask_test_client, token, arti
     assert response.json["name"] == artist.name
     assert response.json["bio"] == artist.bio
     assert response.json["website"] == artist.website
-    assert response.json["performances"] == artist.performances.all()
-    assert response.json["image"] == artist.image
+    assert response.json["performances"] == []
+    assert response.json["image"] is None
     assert response.json["_links"]["uri"] == f"/api/v1/artists/{artist.id}"
     assert response.json["_links"]["collection"] == "/api/v1/artists"
 
@@ -42,13 +43,14 @@ def test_getting_single_artist_without_token_must_fail(flask_test_client, artist
     assert response.json["message"] == "Access token is invalid or expired."
 
 
-def test_getting_list_of_artists_by_authorized_user(flask_test_client, json, token, artist):
+def test_getting_list_of_artists_by_authorized_user(flask_test_client, json, auth, user, artist):
     """Test to ensure that a list of artist resources can be
     successfully retrieved.
     """
     expected_fields = {
         "id", "name", "bio", "website", "performances", "image", "_links"
     }
+    token = auth.register(user.username, "password", user.email)
     response = flask_test_client.get(
         f"/api/v1/artists",
         headers=get_headers(token)
@@ -65,8 +67,8 @@ def test_getting_list_of_artists_by_authorized_user(flask_test_client, json, tok
     assert json.loads(response.json["artists"])[0]["name"] == artist.name
     assert json.loads(response.json["artists"])[0]["bio"] == artist.bio
     assert json.loads(response.json["artists"])[0]["website"] == artist.website
-    assert json.loads(response.json["artists"])[0]["performances"] == artist.performances.all()
-    assert json.loads(response.json["artists"])[0]["image"] == artist.image
+    assert json.loads(response.json["artists"])[0]["performances"] == []
+    assert json.loads(response.json["artists"])[0]["image"] is None
     assert json.loads(response.json["artists"])[0]["_links"]["uri"] == f"/api/v1/artists/{artist.id}"    
     assert json.loads(response.json["artists"])[0]["_links"]["collection"] == "/api/v1/artists"
 
@@ -84,10 +86,11 @@ def test_getting_list_of_artists_without_token_must_fail(flask_test_client):
     assert response.json["message"] == "Access token is invalid or expired."
 
 
-def test_artist_not_found(flask_test_client, token):
+def test_artist_not_found(flask_test_client, auth, user):
     """Test to ensure that a 404 response is returned
     if an artist resource does not exist.
     """
+    token = auth.register(user.username, "password", user.email)
     response = flask_test_client.get(
         f"/api/v1/artists/100",
         headers=get_headers(token)
