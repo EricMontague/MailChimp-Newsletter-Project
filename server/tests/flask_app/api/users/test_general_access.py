@@ -38,11 +38,12 @@ def test_unauthorized_access(flask_test_client, http_method, endpoint):
         ("PATCH", "/api/v1/users/1")
     ]
 )
-def test_http_method_not_allowed(flask_test_client, token, http_method, endpoint):
+def test_http_method_not_allowed(flask_test_client, auth, user, http_method, endpoint):
     """Test to ensure that a 405 HTTP status is returned
     when an endpoint doesn't support a particular
     HTTP method.
     """
+    token = auth.register(user.username, "password", user.email)
     response = flask_test_client.open(
         method=http_method, path=endpoint, headers=get_headers(token)
     )

@@ -20,7 +20,7 @@ class ImageAPI(Resource):
         """Return a single image resource."""
         image = Image.query.get(image_id)
         if image is None:
-            return {"message": "Image not found."}, HTTPStatus.NOT_FOUND
+            return {"message": "Image could not be found."}, HTTPStatus.NOT_FOUND
         return self._schema.dump(image), HTTPStatus.OK
 
     def put(self, image_id):
@@ -32,7 +32,7 @@ class ImageAPI(Resource):
             return {"message": err.messages}, HTTPStatus.BAD_REQUEST
         image = Image.query.get(image_id)
         if image is None:
-            return {"message": "Image not found."}, HTTPStatus.NOT_FOUND
+            return {"message": "Image could not be found."}, HTTPStatus.NOT_FOUND
         image.path = updated_image.path
         db.session.commit()
         return self._schema.dump(image), HTTPStatus.NO_CONTENT
@@ -41,7 +41,7 @@ class ImageAPI(Resource):
         """Delete a single image resource."""
         image = Image.query.get(image_id)
         if image is None:
-            return {"message": "Image not found."}, HTTPStatus.NOT_FOUND
+            return {"message": "Image could not be found."}, HTTPStatus.NOT_FOUND
         db.session.delete(image)
         db.session.commit()
         return "", HTTPStatus.NO_CONTENT

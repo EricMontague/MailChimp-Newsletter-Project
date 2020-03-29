@@ -18,8 +18,8 @@ class PerformanceSchema(ma.SQLAlchemySchema):
     url = ma.Url(required=True)
     start_datetime = ma.auto_field(required=True) #iso format by default
     end_datetime = ma.auto_field(required=True) #iso format by default
-    artist = ma.HyperlinkRelated("api.artist")
-    venue = ma.HyperlinkRelated("api.venue")
+    artist = ma.HyperlinkRelated("api.artist", url_key="artist_id")
+    venue = ma.HyperlinkRelated("api.venue", url_key="venue_id")
 
     _links = ma.Hyperlinks({
         "uri": ma.URLFor("api.performance", performance_id="<id>"), "collection": ma.URLFor("api.performance_list")

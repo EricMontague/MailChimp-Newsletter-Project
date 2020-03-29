@@ -113,7 +113,16 @@ def test_create_new_venue_with_incorrect_field_lengths_must_fail(flask_test_clie
     """Test that a new venue resource cannot be created
     if field lengths are incorrect.
     """
-    pass
+    token = auth.register(user.username, "password", user.email)
+    response = flask_test_client.post(
+        "/api/v1/venues",
+        headers=get_headers(token),
+        data=json.dumps(test_input)
+    )
+    response.status == "400 BAD REQUEST"
+    response.content_type == "application/json"
+    response.json["message"][expected["incorrect_field"]] == expected["message"]
+
 
 
 def test_create_new_venue_with_invalid_state_must_fail(flask_test_client, json, auth, user):
@@ -186,6 +195,60 @@ def test_create_new_venue_with_null_field_must_fail(flask_test_client, auth, use
     assert venue is None
 
 
+def test_create_new_venue_with_duplicate_address_must_fail(flask_test_client, auth, user, db, venue, json):
+    """Test that a new venue with a duplicate street address
+    cannot be created.
+    """
+    venue_object = {
+        "name": "Test Jazz Club",
+        "street_address": venue.street_address,
+        "city": "New York",
+        "state": "NY",
+        "zip_code": "45677"
+    }
+    token = auth.register(user.username, "password", user.email)
+    response = flask_test_client.post(
+        "/api/v1/venues",
+        headers=get_headers(token),
+        data=json.dumps(venue_object)
+    )
+    assert response.status == "409 CONFLICT"
+    assert response.content_type == "application/json"
+    assert response.json["message"] == "A venue with that street address already exists."
+
+    #only the fixture should be in the database
+    assert Venue.query.count() == 1
+
+def test_update_venue_with_valid_data(flask_test_client, auth, user, db, venue, json):
+    """Test that a venue resource can be succesfully updated
+    when valid data is sent to the api.
+    """
+    venue_object = {
+        "name": venue.name,
+        "street_address": "678 Main St.",
+        "city": venue.city,
+        "state": venue.state,
+        "zip_code": venue.zip_code
+    }
+    token = auth.register(user.username, "password", user.email)
+    response = flask_test_client.put(
+        f"/api/v1/venues/{venue.id}",
+        headers=get_headers(token),
+        data=json.dumps(venue_object)
+    )
+    assert response.status == "204 NO CONTENT"
+    assert response.content_type == "application/json"
+    assert response.get_data(as_text=True) == ""
+
+    updated_venue = Venue.query.filter_by(street_address=venue_object["street_address"]).first()
+    assert updated_venue is not None
+    assert updated_venue.name == venue.name
+    assert updated_venue.street_address == venue_object["street_address"]
+    assert updated_venue.city == venue.city
+    assert updated_venue.state == venue.state
+    assert updated_venue.zip_code == venue.zip_code
+
+
 def test_update_venue_id_must_fail(flask_test_client, auth, user, json, venue):
     """Test that a venue's id cannot be updated."""
     updated_venue_object = {
@@ -205,3 +268,33 @@ def test_update_venue_id_must_fail(flask_test_client, auth, user, json, venue):
     assert response.status == "400 BAD REQUEST"
     assert response.content_type == "application/json"
     assert response.json["message"]["id"] == ["Unknown field."]
+
+
+def test_delete_venue(flask_test_client, auth, user, venue, db):
+    """Test that a venue resource can be successfully deleted."""
+    token = auth.register(user.username, "password", user.email)
+    response = flask_test_client.delete(
+        f"/api/v1/venues/{venue.id}",
+        headers=get_headers(token)
+    )
+    assert response.status == "204 NO CONTENT"
+    assert response.content_type == "application/json"
+    assert response.get_data(as_text=True) == ""
+
+    venue_object = Venue.query.get(venue.id)
+    assert venue_object is None
+
+
+def test_delete_venue_not_found_must_fail(flask_test_client, auth, user):
+    """Test that a 404 error is returned if
+    a venue with the given id does not
+    exist.
+    """
+    token = auth.register(user.username, "password", user.email)
+    response = flask_test_client.delete(
+        "/api/v1/venues/100",
+        headers=get_headers(token)
+    )
+    assert response.status == "404 NOT FOUND"
+    assert response.content_type == "application/json"
+    assert response.json["message"] == "Venue could not be found."
