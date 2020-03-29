@@ -1,6 +1,7 @@
 """This module contains the venue resource."""
 
 
+import re
 from flask import request
 from flask_restful import Resource
 from marshmallow import ValidationError
@@ -68,8 +69,9 @@ class VenueListAPI(Resource):
             venue = self._schema.load(json_data)
         except ValidationError as err:
             return {"message": err.messages}, HTTPStatus.BAD_REQUEST
+        if Venue.query.filter_by(street_address=venue.street_address).first() is not None:
+            return {"message": "A venue with that street address already exists."}, HTTPStatus.CONFLICT
         db.session.add(venue)
         db.session.commit()
         return self._schema.dump(venue), HTTPStatus.CREATED
-        
         
