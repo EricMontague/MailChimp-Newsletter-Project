@@ -12,13 +12,8 @@ class ImageSchema(ma.SQLAlchemySchema):
     class Meta:
         model = Image
 
-    id = ma.auto_field(dump_only=True)
-    path = ma.auto_field(required=True)
+    path = ma.auto_field(required=True, validate=validate.Length(min=1, max=256))
     artist = ma.HyperlinkRelated("api.artist", url_key="artist_id")
-
-    _links = ma.Hyperlinks({
-        "uri": ma.URLFor("api.image", image_id="<id>"), "collection": ma.URLFor("api.image_list")
-    })
 
     @post_load
     def make_object(self, data, **kwargs):
@@ -26,3 +21,4 @@ class ImageSchema(ma.SQLAlchemySchema):
         if data is None:
             raise ValidationError("No data was provided")
         return Image(**data)
+

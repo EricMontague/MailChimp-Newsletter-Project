@@ -4,68 +4,37 @@
 from flask import request
 from flask_restful import Resource
 from marshmallow import ValidationError
-from app.models import Image
+from app.models import Image, Artist
 from app.extensions import db
 from http import HTTPStatus
-from app.api.helpers import paginate
 
 
-class ImageAPI(Resource):
-    """Class to represent a single image resource."""
-    
-    def __init__(self, **kwargs):
-        self._schema = kwargs["schema"]
-
-    def get(self, image_id):
-        """Return a single image resource."""
-        image = Image.query.get(image_id)
-        if image is None:
-            return {"message": "Image could not be found."}, HTTPStatus.NOT_FOUND
-        return self._schema.dump(image), HTTPStatus.OK
-
-    def put(self, image_id):
-        """Update a single image resource."""
-        json_data = request.get_json()
-        try:
-            updated_image = self._schema.load(json_data)
-        except ValidationError as err:
-            return {"message": err.messages}, HTTPStatus.BAD_REQUEST
-        image = Image.query.get(image_id)
-        if image is None:
-            return {"message": "Image could not be found."}, HTTPStatus.NOT_FOUND
-        image.path = updated_image.path
-        db.session.commit()
-        return self._schema.dump(image), HTTPStatus.NO_CONTENT
-
-    def delete(self, image_id):
-        """Delete a single image resource."""
-        image = Image.query.get(image_id)
-        if image is None:
-            return {"message": "Image could not be found."}, HTTPStatus.NOT_FOUND
-        db.session.delete(image)
-        db.session.commit()
-        return "", HTTPStatus.NO_CONTENT
-        
-
-class ImageListAPI(Resource):
-    """Class to represent a collection of image resources."""
+class ArtistImageListAPI(Resource):
+    """Class to represent a collection of image resources
+    for an artist.
+    """
 
     def __init__(self, **kwargs):
         self._schema = kwargs["schema"]
 
-    def get(self):
-        """Return all image resources."""
-        return paginate(Image, self._schema), HTTPStatus.OK
+    def get(self, artist_id):
+        """Return all image resources for a specific artist."""
+        artist = Artist.query.get(artist_id)
+        if artist is None:
+            return {"message": "Artist could not be found."}, HTTPStatus.NOT_FOUND
+        images = [artist.image]
+        return self._schema.dumps(images, many=True), HTTPStatus.OK
 
-    def post(self):
-        """Create a new image resource."""
+    def put(self, artist_id):
+        """Create or replace an image resource for a specific artist."""
         json_data = request.get_json()
         try:
             image = self._schema.load(json_data)
         except ValidationError as err:
             return {"message": err.messages}, HTTPStatus.BAD_REQUEST
-        db.session.add(image)
+        artist = Artist.query.get(artist_id)
+        if artist is None:
+            return {"message": "Artist could not be found."}, HTTPStatus.NOT_FOUND
+        artist.image = image
         db.session.commit()
-        return self._schema.dump(image), HTTPStatus.CREATED
-
-    
+        return "", HTTPStatus.NO_CONTENT

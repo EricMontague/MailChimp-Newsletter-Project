@@ -49,6 +49,20 @@ class ArtistAPI(Resource):
         return "", HTTPStatus.NO_CONTENT
 
 
+class ArtistByNameAPI(Resource):
+    """Class to represent a single artist resource identified by name."""
+
+    def __init__(self, **kwargs):
+        self._schema = kwargs["schema"]
+
+    def get(self, name):
+        """Return a single artist resource identified by name."""
+        artist = Artist.query.filter_by(name=name).first()
+        if artist is None:
+            return {"message": "Artist could not be found."}, HTTPStatus.NOT_FOUND
+        return self._schema.dump(artist), HTTPStatus.OK
+
+
 class ArtistListAPI(Resource):
     """Class to represent a collection of artist resources."""
     
@@ -57,7 +71,12 @@ class ArtistListAPI(Resource):
 
     def get(self):
         """Return all artist resources."""
-        return paginate(Artist, self._schema), HTTPStatus.OK
+        name = request.args.get("name", None)
+        if name is not None:
+            query = Artist.query.filter_by(name=name)
+        else:
+            query = Artist.query
+        return paginate(Artist.__tablename__, query, self._schema), HTTPStatus.OK
         
     def post(self):
         """Create a new artist resource."""

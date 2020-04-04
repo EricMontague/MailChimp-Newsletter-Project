@@ -9,7 +9,7 @@ class Performance(db.Model):
 
     __tablename__ = "performances"
     id = db.Column(db.Integer, primary_key=True)
-    title = db.Column(db.String(128), nullable=True)
+    title = db.Column(db.String(128), nullable=False)
     description = db.Column(db.Text(), nullable=True)
     url = db.Column(db.Text(), nullable=False)
     start_datetime = db.Column(db.DateTime, nullable=False)
@@ -20,4 +20,4 @@ class Performance(db.Model):
     def __repr__(self):
         """Return a string representation of the model."""
         return "<Performance: %r>" % self.title
-        
+

@@ -52,6 +52,22 @@ class VenueAPI(Resource):
         return "", HTTPStatus.NO_CONTENT
 
 
+class VenueByNameAPI(Resource):
+    """Class to represent a single venue resource identified by
+    its unique name.
+    """
+
+    def __init__(self, **kwargs):
+        self._schema = kwargs["schema"]
+
+    def get(self, name):
+        """Return a single venue resource identified by its name."""
+        venue = Venue.query.filter_by(name=name).first()
+        if venue is None:
+            return {"message": "Venue could not be found."}, HTTPStatus.NOT_FOUND
+        return self._schema.dump(venue), HTTPStatus.OK
+
+
 class VenueListAPI(Resource):
     """Class to represent a collection of venue resources."""
     
@@ -60,7 +76,8 @@ class VenueListAPI(Resource):
 
     def get(self):
         """Return all venue resources."""
-        return paginate(Venue, self._schema), HTTPStatus.OK
+        query = Venue.query
+        return paginate(Venue.__tablename__, query, self._schema), HTTPStatus.OK
 
     def post(self):
         """Create a new venue resource."""
