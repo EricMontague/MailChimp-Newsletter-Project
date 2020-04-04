@@ -1,6 +1,7 @@
 """This module contains helper functions for testing."""
 
 import json
+from datetime import datetime
 
 
 class AuthActions(object):
@@ -11,15 +12,11 @@ class AuthActions(object):
         response = self._client.post(
             "/auth/register",
             headers={"Content-Type": "application/json", "Accept": "application/json"},
-            data=json.dumps({"username": username, "password": password, "email": email})
+            data=json.dumps(
+                {"username": username, "password": password, "email": email}
+            ),
         )
         return response.json["access_token"]
-
-  
-def generate_user_instance(username="username", password="password", email="user@gmail.com"):
-    """Return an instance of a User for testing."""
-    from app.models import User
-    return User(username=username, password=password, email=email)
 
 
 def get_headers(token=None):
@@ -28,13 +25,10 @@ def get_headers(token=None):
     """
     if token is not None:
         headers = {
-            "Content-Type": "application/json", 
+            "Content-Type": "application/json",
             "Accept": "application/json",
-            "Authorization": f"Bearer {token}"
+            "Authorization": f"Bearer {token}",
         }
     else:
-        headers={
-            "Content-Type": "application/json", 
-            "Accept": "application/json"
-        }
+        headers = {"Content-Type": "application/json", "Accept": "application/json"}
     return headers

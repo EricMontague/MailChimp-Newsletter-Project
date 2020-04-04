@@ -8,20 +8,20 @@ from flask_app.utils import get_headers
 @mark.parametrize(
     "http_method, endpoint",
     [
-        ("GET", "/api/v1/images"),
-        ("POST", "/api/v1/images"),
-        ("GET", "/api/v1/images/1"),
-        ("PUT", "/api/v1/images/1"),
-        ("DELETE", "/api/v1/images/1")
+        ("GET", "/api/v1/venues"),
+        ("POST", "/api/v1/venues"),
+        ("GET", "/api/v1/venues/1"),
+        ("PUT", "/api/v1/venues/1"),
+        ("DELETE", "/api/v1/venues/1")
     ]
 )
 def test_unauthorized_access(flask_test_client, http_method, endpoint):
     """Test to ensure that a 401 HTTP status is returned
-    when the image routes are accessed
+    when the venue routes are accessed
     without a token.
     """
     response = flask_test_client.open(
-        method=http_method, path=endpoint
+        method=http_method, path=endpoint, headers=get_headers()
     )
     assert response.status == "401 UNAUTHORIZED"
     assert response.content_type == "application/json"
@@ -38,7 +38,7 @@ def test_unauthorized_access(flask_test_client, http_method, endpoint):
         ("PATCH", "/api/v1/venues/1")
     ]
 )
-def test_method_not_allowed(flask_test_client, auth, user, http_method, endpoint):
+def test_http_method_not_allowed(flask_test_client, http_method, endpoint, auth, user):
     """Test to ensure that a 405 HTTP status is returned
     when an endpoint doesn't support a particular
     HTTP method.
@@ -50,4 +50,4 @@ def test_method_not_allowed(flask_test_client, auth, user, http_method, endpoint
     assert response.status == "405 METHOD NOT ALLOWED"
     assert response.content_type == "application/json"
     assert response.json["message"] == "The method is not allowed for the requested URL."
-    
+

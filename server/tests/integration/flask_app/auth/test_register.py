@@ -2,7 +2,6 @@
 
 
 from pytest import mark
-from flask_app.utils import generate_user_instance
 
 
 def test_register_with_valid_input(flask_test_client, json):
