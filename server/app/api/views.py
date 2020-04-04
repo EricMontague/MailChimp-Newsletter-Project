@@ -8,12 +8,14 @@ from flask_jwt_extended import verify_jwt_in_request
 from .resources import (
     ArtistAPI,
     ArtistListAPI,
+    ArtistByNameAPI,
     VenueAPI,
+    VenueByNameAPI,
     VenueListAPI,
-    ImageAPI,
-    ImageListAPI,
+    ArtistImageListAPI,
     PerformanceAPI,
     PerformanceListAPI,
+    ArtistPerformanceListAPI,
     UserAPI,
     UserListAPI
 )
@@ -38,6 +40,7 @@ def before_request():
     except:
         return jsonify({"message": "Access token is invalid or expired."}), HTTPStatus.UNAUTHORIZED
     
+
 #artist resources
 api.add_resource(
     ArtistListAPI, 
@@ -51,22 +54,21 @@ api.add_resource(
     resource_class_kwargs={"schema": ArtistSchema()},
     endpoint="artist"
 )
+api.add_resource(
+    ArtistByNameAPI, 
+    "/artists/<name>",
+    resource_class_kwargs={"schema": ArtistSchema()},
+    endpoint="artist_by_name"
+)
 
 
 #image resources
 api.add_resource(
-    ImageListAPI,
-    "/images",
+    ArtistImageListAPI,
+    "/artists/<int:artist_id>/images",
     resource_class_kwargs={"schema": ImageSchema()},
     endpoint="image_list"
 )
-api.add_resource(
-    ImageAPI,
-    "/images/<int:image_id>",
-    resource_class_kwargs={"schema": ImageSchema()},
-    endpoint="image"
-)
-
 
 #performance resources
 api.add_resource(
@@ -80,6 +82,12 @@ api.add_resource(
     "/performances/<int:performance_id>",
     resource_class_kwargs={"schema": PerformanceSchema()},
     endpoint="performance"
+)
+api.add_resource(
+    ArtistPerformanceListAPI,
+    "/artists/<int:artist_id>/performances",
+    resource_class_kwargs={"schema": PerformanceSchema()},
+    endpoint="artist_performance_list"
 )
 
 
@@ -111,3 +119,10 @@ api.add_resource(
     resource_class_kwargs={"schema": VenueSchema()},
     endpoint="venue"
 )
+api.add_resource(
+    VenueByNameAPI,
+    "/venues/<name>",
+    resource_class_kwargs={"schema": VenueSchema()},
+    endpoint="venue_by_name"
+)
+
