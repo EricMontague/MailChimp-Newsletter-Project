@@ -5,7 +5,7 @@ is different.
 
 
 from pytest import mark
-from flask_app.utils import get_headers, datetime_to_string
+from flask_app.utils import get_headers
 
 
 def test_getting_list_of_artist_performances_by_authorized_user(
