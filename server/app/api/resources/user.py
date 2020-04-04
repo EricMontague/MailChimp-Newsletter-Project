@@ -58,5 +58,6 @@ class UserListAPI(Resource):
 
     def get(self):
         """Return all user resources."""
-        return paginate(User, self._schema), HTTPStatus.OK        
+        query = User.query
+        return paginate(User.__tablename__, query, self._schema), HTTPStatus.OK        
     
