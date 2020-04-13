@@ -64,6 +64,7 @@ requests==2.23.0
 Scrapy==2.0.0
 scrapy-rotating-proxies==0.6.2
 Scrapy-UserAgents==0.0.1
+selenium==3.141.0
 service-identity==18.1.0
 shadow-useragent==0.0.17
 six==1.14.0
