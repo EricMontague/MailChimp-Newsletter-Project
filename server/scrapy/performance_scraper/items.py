@@ -8,7 +8,35 @@
 import scrapy
 
 
-class PerformanceScraperItem(scrapy.Item):
-    # define the fields for your item here like:
-    # name = scrapy.Field()
-    pass
+class PerformanceItem(scrapy.Item):
+    """Class to represent a performance."""
+
+    title = scrapy.Field()
+    description = scrapy.Field()
+    url = scrapy.Field()
+    start_datetime = scrapy.Field()
+    end_datetime = scrapy.Field()
+
+
+class VenueItem(scrapy.Item):
+    """Class to represent a venue."""
+
+    name = scrapy.Field()
+    street_address = scrapy.Field()
+    city = scrapy.Field()
+    state = scrapy.Field()
+    zip_code = scrapy.Field()
+
+
+class ArtistItem(scrapy.Item):
+    """Class to represent an artist."""
+
+    name = scrapy.Field()
+    bio = scrapy.Field()
+    website = scrapy.Field()
+    
+
+class ImageItem(scrapy.Item):
+    """Class to represent an image."""
+
+    filename = scrapy.Field()
