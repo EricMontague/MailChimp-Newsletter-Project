@@ -6,6 +6,6 @@
 # See: http://docs.scrapy.org/en/latest/topics/item-pipeline.html
 
 
-class PerformanceScraperPipeline(object):
+class PerformancePipeline(object):
     def process_item(self, item, spider):
         return item
