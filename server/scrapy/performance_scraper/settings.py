@@ -52,13 +52,9 @@ SPIDER_MIDDLEWARES = {
 
 # Enable or disable downloader middlewares
 # See http://docs.scrapy.org/en/latest/topics/downloader-middleware.html
-DOWNLOADER_MIDDLEWARES = {
-   "scrapy.downloadermiddlewares.useragent.UserAgentMiddleWare": None,
-   "scrapy_useragents.downloadermiddlewares.useragents.UserAgentsMiddleware": 500,
-   "performance_scraper.middlewares.PerformanceScraperDownloaderMiddleware": 543,
-   "rotating_proxies.middlewares.RotatingProxyMiddleware": 610,
-   "rotating_proxies.middlewares.BanDetectionMiddleware": 620,   
-}
+#DOWNLOADER_MIDDLEWARES = {
+#    'performance_scraper.middlewares.PerformanceScraperDownloaderMiddleware': 543,
+#}
 
 # Enable or disable extensions
 # See http://docs.scrapy.org/en/latest/topics/extensions.html
@@ -69,7 +65,7 @@ DOWNLOADER_MIDDLEWARES = {
 # Configure item pipelines
 # See http://docs.scrapy.org/en/latest/topics/item-pipeline.html
 ITEM_PIPELINES = {
-   'performance_scraper.pipelines.PerformanceScraperPipeline': 300,
+   'performance_scraper.pipelines.PerformancePipeline': 300,
 }
 
 # Enable and configure the AutoThrottle extension (disabled by default)
@@ -85,10 +81,6 @@ AUTOTHROTTLE_TARGET_CONCURRENCY = 1.0
 # Enable showing throttling stats for every response received:
 #AUTOTHROTTLE_DEBUG = False
 
-
-#Path to a file that stores proxies to be used in scraping.
-#Proxies are stored one per line
-ROTATING_PROXY_LIST_PATH = "./proxies.txt"
 
 # Enable and configure HTTP caching (disabled by default)
 # See http://docs.scrapy.org/en/latest/topics/downloader-middleware.html#httpcache-middleware-settings
