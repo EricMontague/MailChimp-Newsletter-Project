@@ -1,2 +1,5 @@
-from . login import LoginAPI
-from . register import RegisterAPI
+"""This module contains all resources for the auth blueprint."""
+
+
+from app.auth.resources.login import LoginAPI
+from app.auth.resources.register import RegisterAPI
