@@ -17,9 +17,10 @@ class APIPipeline(object):
         auth_manager = AuthManager(
             username=crawler.settings.get("SCRAPY_USERNAME"),
             password=crawler.settings.get("SCRAPY_PASSWORD"),
-            email=crawler.settings.get("SCRAPY_EMAIL")
+            email=crawler.settings.get("SCRAPY_EMAIL"),
+            cache_path=crawler.settings.get("TOKEN_FILE_PATH")
         )
-        token = AuthManager.retrieve_token()
+        token = AuthManager.get_cached_token()
         api_client = FlaskAPIClient(token=token, auth_manager=auth_manager)
         return cls(api_client=api_client)
 
