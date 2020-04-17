@@ -1,9 +1,5 @@
-# -*- coding: utf-8 -*-
+"""This module contains Scrapy Item classes for used throught the project."""
 
-# Define here the models for your scraped items
-#
-# See documentation in:
-# http://docs.scrapy.org/en/latest/topics/items.html
 
 import scrapy
 
@@ -16,6 +12,8 @@ class PerformanceItem(scrapy.Item):
     url = scrapy.Field()
     start_datetime = scrapy.Field()
     end_datetime = scrapy.Field()
+    artist = scrapy.Field()
+    venue = scrapy.Field()
 
 
 class VenueItem(scrapy.Item):
@@ -34,9 +32,29 @@ class ArtistItem(scrapy.Item):
     name = scrapy.Field()
     bio = scrapy.Field()
     website = scrapy.Field()
+    image = scrapy.Field()
     
 
-class ImageItem(scrapy.Item):
-    """Class to represent an image."""
-
-    filename = scrapy.Field()
+#performance item structure
+# {
+#     "artist": {
+#         "name": None,
+#         "bio": None,
+#         "website": None,
+#         "image": {
+#             "name": None
+#         }
+#     },
+#     "venue": {
+#         "name": None,
+#         "street_address": None,
+#         "city": None,
+#         "state": None,
+#         "zip_code": None
+#     },
+#     "start_datetime": None,
+#     "end_datetime": None,
+#     "title": None,
+#     "description": None,
+#     "url": None
+# }
