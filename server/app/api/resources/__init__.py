@@ -1,18 +1,21 @@
-from .artist import (
+"""This package contains all resources for the API blueprint."""
+
+
+from app.api.resources.artist import (
     ArtistAPI, 
     ArtistListAPI,
     ArtistByNameAPI
 )
-from .image import ArtistImageListAPI
-from .performance import (
+from app.api.resources.image import ArtistImageListAPI
+from app.api.resources.performance import (
     PerformanceAPI, 
     PerformanceListAPI, 
     ArtistPerformanceListAPI
 )
-from .venue import (
+from app.api.resources.venue import (
     VenueAPI,
     VenueByNameAPI, 
     VenueListAPI
 )
-from .user import UserAPI, UserListAPI
+from app.api.resources.user import UserAPI, UserListAPI
 
