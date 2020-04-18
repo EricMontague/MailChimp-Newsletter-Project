@@ -71,11 +71,7 @@ class ArtistListAPI(Resource):
 
     def get(self):
         """Return all artist resources."""
-        name = request.args.get("name", None)
-        if name is not None:
-            query = Artist.query.filter_by(name=name)
-        else:
-            query = Artist.query
+        query = Artist.query
         return paginate(Artist.__tablename__, query, self._schema), HTTPStatus.OK
         
     def post(self):
