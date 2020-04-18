@@ -4,21 +4,20 @@
 from datetime import datetime
 from scrapy.spiders import CrawlSpider, Rule
 from performance_scraper.items import PerformanceItem, ArtistItem
-from performance_scraper.helpers import convert_to_datetime
 from performance_scraper.venues import heritage_item
 
 
 class HeritageSpider(CrawlSpider):
     """Spider to crawl Heritage's website."""
 
-    name = "heritage_spider"
+    name = "heritage"
     start_urls = ["https://heritage.life/events/"]
 
     def parse(self, response):
         """Parse the response and return PerformanceItem instances."""
         event_list_container = response.css("dl.simcal-events-list-container")
         for event_date, event_details in zip(
-            event_list_container.css("dt.simcal-day-label"), container.css("dd.simcal-day")
+            event_list_container.css("dt.simcal-day-label"), event_list_container.css("dd.simcal-day")
         ):  
             #format of date is Monday, April 13th
             date = event_date.css(".simcal-date-format::text").get()
