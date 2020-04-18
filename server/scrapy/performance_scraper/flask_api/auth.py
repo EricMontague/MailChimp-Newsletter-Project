@@ -5,7 +5,9 @@ with the flask API.
 
 import requests
 import json
+from http import HTTPStatus
 from scrapy.utils.project import get_project_settings
+from performance_scraper.flask_api.exceptions import FlaskAPIException
 
 
 class AuthManager:
@@ -36,7 +38,18 @@ class AuthManager:
             token = response.json()["access_token"]
         except requests.exceptions.HTTPError:
             #need to add code for logging here
-            token = self._register()
+            if response.status_code == HTTPStatus.UNAUTHORIZED:
+                token = self._register()
+            else:
+                try:
+                    message = response.json()["message"]
+                except (ValueError, KeyError):
+                    message = "An error occurred."
+                    raise FlaskAPIException(
+                        response.status_code,
+                        f"{response.url}:\n {message}"
+                    )
+        self._store_token(token)
         return token
 
     def _register(self):
@@ -54,8 +67,15 @@ class AuthManager:
             token = response.json()["access_token"]
         except requests.exceptions.HTTPError:
             #need to add code for logging here
-            
-            token = None
+            #attempt to retrieve error message
+            try:
+                message = response.json()["message"]
+            except (ValueError, KeyError):
+                message = "An error occurred."
+                raise FlaskAPIException(
+                    response.status_code,
+                    f"{response.url}:\n {message}"
+                )
         return token
 
     def _get_headers(self):
@@ -68,10 +88,11 @@ class AuthManager:
         with open(self.cache_path, "w") as token_file:
             json.dump(data, token_file)
     
-    @staticmethod
-    def get_cached_token():
+    def get_cached_token(self):
         """Return token stored in a file."""
         with open(self.cache_path, "r") as token_file:
             data = json.load(token_file)
-        return data["access_token"]
+        if data is not None:
+            return data.get("access_token")
+        return None
 
