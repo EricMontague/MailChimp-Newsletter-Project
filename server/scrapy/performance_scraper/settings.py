@@ -8,8 +8,7 @@ SCRAPY_USERNAME = os.environ.get("SCRAPY_USERNAME")
 SCRAPY_PASSWORD = os.environ.get("SCRAPY_PASSWORD")
 SCRAPY_EMAIL = os.environ.get("SCRAPY_EMAIL")
 
-TOKEN_FILE_PATH = "./token.json"
-
+TOKEN_FILE_PATH = "token.json"
 
 BOT_NAME = 'performance_scraper'
 
