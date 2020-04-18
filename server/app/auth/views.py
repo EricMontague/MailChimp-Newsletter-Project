@@ -6,7 +6,7 @@ authorization.
 from http import HTTPStatus
 from flask import Blueprint
 from flask_restful import Api
-from .resources import LoginAPI, RegisterAPI
+from app.auth.resources import LoginAPI, RegisterAPI
 from app.api.schemas import UserSchema
 
 

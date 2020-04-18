@@ -5,7 +5,7 @@ from http import HTTPStatus
 from flask import Blueprint, jsonify, request
 from flask_restful import Api
 from flask_jwt_extended import verify_jwt_in_request
-from .resources import (
+from app.api.resources import (
     ArtistAPI,
     ArtistListAPI,
     ArtistByNameAPI,
@@ -19,7 +19,7 @@ from .resources import (
     UserAPI,
     UserListAPI
 )
-from .schemas import (
+from app.api.schemas import (
     ArtistSchema,
     VenueSchema,
     ImageSchema,
