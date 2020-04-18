@@ -13,7 +13,7 @@ from performance_scraper.flask_api.exceptions import FlaskAPIException
 class AuthManager:
     """Class to authenticate with the Flask API."""
 
-    api_prefix = "/api/v1/"
+    api_prefix = "http://127.0.0.1:5000/auth/"
 
     def __init__(self, username, password, email, cache_path):
         self.username = username
@@ -37,7 +37,6 @@ class AuthManager:
             response.raise_for_status()
             token = response.json()["access_token"]
         except requests.exceptions.HTTPError:
-            #need to add code for logging here
             if response.status_code == HTTPStatus.UNAUTHORIZED:
                 token = self._register()
             else:
@@ -66,7 +65,6 @@ class AuthManager:
             response.raise_for_status()
             token = response.json()["access_token"]
         except requests.exceptions.HTTPError:
-            #need to add code for logging here
             #attempt to retrieve error message
             try:
                 message = response.json()["message"]

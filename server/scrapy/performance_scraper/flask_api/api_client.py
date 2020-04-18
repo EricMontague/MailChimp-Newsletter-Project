@@ -9,7 +9,7 @@ from performance_scraper.flask_api.exceptions import FlaskAPIException
 class FlaskAPIClient:
     """Class to send requests to the Flask API."""
 
-    api_prefix = "/api/v1/"
+    api_prefix = "http://127.0.0.1:5000/api/v1/"
 
     def __init__(self, token=None, auth_manager=None):
         self._token = token
@@ -84,7 +84,6 @@ class FlaskAPIClient:
                 message = response.json()["message"]
             except (ValueError, KeyError):
                 message = "An error occurred during your request. No error message could be found."
-            # logging needed here
             raise FlaskAPIException(
                 response.status_code, f"{response.url}:\n {message}"
             )
