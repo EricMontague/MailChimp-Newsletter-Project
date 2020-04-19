@@ -25,7 +25,7 @@ class VenueSchema(ma.SQLAlchemySchema):
     city = ma.auto_field(required=True, validate=validate.Length(min=1, max=64))
     state = ma.auto_field(required=True, validate=[validate.Length(equal=2), validate.OneOf(STATES)])
     zip_code = ma.auto_field(required=True, validate=validate.Length(min=5, max=10))
-    performances = ma.List(ma.HyperlinkRelated("api.performance_list"))
+    performances = ma.List(ma.HyperlinkRelated("api.performance", url_key="performance_id"))
 
     _links = ma.Hyperlinks({
         "uri": ma.URLFor("api.venue", venue_id="<id>"), "collection": ma.URLFor("api.venue_list")
