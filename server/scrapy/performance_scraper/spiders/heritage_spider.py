@@ -25,8 +25,8 @@ class HeritageSpider(CrawlSpider):
                 artist_item = ArtistItem()
                 performance_item = PerformanceItem()
 
-                start_time = event_detail.css(".simcal-event-start::text").get()
-                end_time = event_detail.css(".simcal-event-end::text").get()
+                start_time = event_detail.css(".simcal-event-start-time::text").get()
+                end_time = event_detail.css(".simcal-event-end-time::text").get()
                 title = event_detail.css(".simcal-event-title::text").get()
 
                 performance_item["title"] = title
@@ -47,7 +47,8 @@ class HeritageSpider(CrawlSpider):
         month = str(datetime.now().month)
         day = date_string.split()[2][:-2]
         year = str(datetime.now().year)
-        time = date_string[:-3]
+        #convert time into military time
+        time = datetime.strptime(time_string, "%I:%M %p").strftime("%H:%M")
         return month + "/" + day +"/" + year + " " + time
 
 
