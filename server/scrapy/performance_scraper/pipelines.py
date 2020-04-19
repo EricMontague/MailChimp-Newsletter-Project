@@ -33,23 +33,23 @@ class APIPipeline(object):
         artist_item = performance_item.pop("artist")
 
         # attempt to get venue resource from API. If it doesn't exist, create it
-        venue_resource = self.retrieve_venue_info(venue_item)
+        venue_resource = self.retrieve_venue_info(dict(venue_item))
         if venue_resource is None:
-            venue_resource = self.store_venue_info(venue_item)
+            venue_resource = self.store_venue_info(dict(venue_item))
 
         # attempt to get artist resource  from API. If it doesn't exist, create it
-        artist_resource = self.retrieve_artist_info(artist_item)
+        artist_resource = self.retrieve_artist_info(dict(artist_item))
         if artist_resource is None:
-            artist_resource = self.store_artist_info(artist_item)
+            artist_resource = self.store_artist_info(dict(artist_item))
 
         # update artist's image
         if artist_item.get("image") is not None:
-            self.store_artist_image(artist_resource["id"], artist_item)
+            self.store_artist_image(artist_resource["id"], dict(artist_item))
         # update performance item to include venue and artist id's that will
         # need to be sent in the payload to the API
         performance_item["venue_id"] = venue_resource["id"]
         performance_item["artist_id"] = artist_resource["id"]
-        self.store_performance_info(performance_item)
+        self.store_performance_info(dict(performance_item))
         return performance_item
 
     def retrieve_venue_info(self, venue_item):
