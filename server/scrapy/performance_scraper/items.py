@@ -13,7 +13,9 @@ class PerformanceItem(scrapy.Item):
     start_datetime = scrapy.Field()
     end_datetime = scrapy.Field()
     artist = scrapy.Field()
+    artist_id = scrapy.Field()
     venue = scrapy.Field()
+    venue_id = scrapy.Field()
 
 
 class VenueItem(scrapy.Item):
