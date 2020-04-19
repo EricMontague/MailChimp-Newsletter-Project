@@ -13,7 +13,7 @@ class BaseConfig:
     SECRET_KEY = "fake key for development only"
     JWT_IDENTITY_CLAIM = "sub"
     JWT_ERROR_MESSAGE_KEY = "message"
-    JWT_ACCESS_TOKEN_EXPIRES = 1800
+    JWT_ACCESS_TOKEN_EXPIRES = 1800 #30 minutes
     DB_USER = "ericmontague"
     DB_PASSWORD = "password"
     DB_NAME = "mailchimp"
