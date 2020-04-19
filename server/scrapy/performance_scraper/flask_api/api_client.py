@@ -3,6 +3,7 @@
 
 import requests
 import json
+from http import HTTPStatus
 from performance_scraper.flask_api.exceptions import FlaskAPIException
 
 
@@ -65,29 +66,40 @@ class FlaskAPIClient:
     def _internal_call(self, method, url, payload=None, query_string_parameters=None):
         """Method for making calls to the API."""
         data = {}
+        retries = 5
+        json_response = None
         headers = self._get_headers()
-        if payload is not None:
-            data = json.dumps(payload)
-        try:
-            response = requests.request(
-                method,
-                self.api_prefix + url,
-                headers=headers,
-                params=query_string_parameters,
-                **data,
-            )
-            response.raise_for_status()
-            json_response = response.json()
-        except requests.exceptions.HTTPError:
-            # attempt to retrieve error message
+        while retries > 0:
+            if payload is not None:
+                data = json.dumps(payload)
             try:
-                message = response.json()["message"]
-            except (ValueError, KeyError):
-                message = "An error occurred during your request. No error message could be found."
-            raise FlaskAPIException(
-                response.status_code, f"{response.url}:\n {message}"
-            )
-        except ValueError:  # a put request will not return a JSON response
-            json_response = None
+                response = requests.request(
+                    method,
+                    self.api_prefix + url,
+                    headers=headers,
+                    data=data,
+                    params=query_string_parameters
+                )
+                response.raise_for_status()
+                json_response = response.json()
+                break
+            except requests.exceptions.HTTPError:
+                #token is expired, need to retrieve a new one a try again
+                if response.status_code == HTTPStatus.UNAUTHORIZED:
+                    self._token = self.auth_manager.login()
+                    headers["Authorization"] = f"Bearer {self._token}"
+                    retries -= 1
+                else:
+                    # attempt to retrieve error message if any other error occurred
+                    try:
+                        message = response.json()["message"]
+                    except (ValueError, KeyError):
+                        message = "An error occurred during your request. No error message could be found."
+                    
+                    raise FlaskAPIException(
+                        response.status_code, f"{response.url}:\n {message}"
+                    )
+            except ValueError:  # a put request will not return a JSON response
+                break
         return json_response
 
