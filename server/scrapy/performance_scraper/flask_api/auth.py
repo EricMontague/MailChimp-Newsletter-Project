@@ -90,7 +90,5 @@ class AuthManager:
         """Return token stored in a file."""
         with open(self.cache_path, "r") as token_file:
             data = json.load(token_file)
-        if data is not None:
-            return data.get("access_token")
-        return None
+        return data
 
