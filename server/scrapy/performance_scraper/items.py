@@ -16,6 +16,7 @@ class PerformanceItem(scrapy.Item):
     artist_id = scrapy.Field()
     venue = scrapy.Field()
     venue_id = scrapy.Field()
+    image = scrapy.Field()
 
 
 class VenueItem(scrapy.Item):
@@ -35,6 +36,14 @@ class ArtistItem(scrapy.Item):
     bio = scrapy.Field()
     website = scrapy.Field()
     image = scrapy.Field()
+
+
+class ImageItem(scrapy.Item):
+    """Class to represent the image of an artist."""
+
+    url = scrapy.Field()
+    path = scrapy.Field()
+    
     
 
 #performance item structure
@@ -43,10 +52,7 @@ class ArtistItem(scrapy.Item):
 #         "name": None,
 #         "bio": None,
 #         "website": None,
-#         "image": {
-#             "name": None
-#         }
-#     },
+#      },
 #     "venue": {
 #         "name": None,
 #         "street_address": None,
@@ -58,5 +64,9 @@ class ArtistItem(scrapy.Item):
 #     "end_datetime": None,
 #     "title": None,
 #     "description": None,
-#     "url": None
+#     "url": None,
+#     "image": {
+#          "url": None,
+#          "path": None 
+#      }
 # }
