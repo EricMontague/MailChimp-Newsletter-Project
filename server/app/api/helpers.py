@@ -1,18 +1,16 @@
 """This module contains helper functions for the api blueprint."""
 
 
-from flask import request, url_for
+from flask import request, url_for, current_app
 from datetime import datetime
-
-
-DEFAULT_PAGE_SIZE = 50
-DEFAULT_PAGE_NUMBER = 1
 
 
 def paginate(tablename, query, schema):
     """Return a paginated collection of resources."""
-    page = request.args.get("page", DEFAULT_PAGE_NUMBER, type=int)
-    per_page = request.args.get("per_page", DEFAULT_PAGE_SIZE, type=int)
+    page = request.args.get("page", default=1, type=int)
+    per_page = request.args.get(
+        "per_page", current_app.config["DEFAULT_RESOURCES_PER_PAGE"], type=int
+    )
     pagination = query.paginate(page=page, per_page=per_page, error_out=False)
     prev = None
     if pagination.has_prev:
@@ -36,4 +34,14 @@ def string_to_date(date_string, format):
         return datetime.strptime(date_string, format).date()
     except ValueError:
         return None
+
+
+def allowed_file_extension(filename):
+    """Return True if the extension of the given file is in the set of
+    allowed file extensions.
+    """
+    if "." not in filename:
+        return False
+    file_extension = filename.lower().split(".")[-1]
+    return file_extension in current_app.config["ALLOWED_FILE_EXTENSIONS"]
     
