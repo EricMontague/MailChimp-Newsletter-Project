@@ -3,12 +3,13 @@
 
 import os 
 
+BASEDIR = os.path.abspath(os.path.dirname(__file__))
 
 SCRAPY_USERNAME = os.environ.get("SCRAPY_USERNAME")
 SCRAPY_PASSWORD = os.environ.get("SCRAPY_PASSWORD")
 SCRAPY_EMAIL = os.environ.get("SCRAPY_EMAIL")
 
-TOKEN_FILE_PATH = "token.json"
+TOKEN_FILE_PATH =  BASEDIR + "/flask_api/token.json"
 
 BOT_NAME = 'performance_scraper'
 
@@ -66,8 +67,13 @@ SPIDER_MIDDLEWARES = {
 # Configure item pipelines
 # See http://docs.scrapy.org/en/latest/topics/item-pipeline.html
 ITEM_PIPELINES = {
-   'performance_scraper.pipelines.APIPipeline': 300,
+   "scrapy.pipelines.images.ImagesPipeline": 1,
+   "performance_scraper.pipelines.APIPipeline": 300
 }
+
+IMAGES_STORE = BASEDIR + "/artist_images"
+IMAGES_URLS_FIELD = "image"
+IMAGES_RESULT_FIELD = "path"
 
 # Enable and configure the AutoThrottle extension (disabled by default)
 # See http://docs.scrapy.org/en/latest/topics/autothrottle.html
