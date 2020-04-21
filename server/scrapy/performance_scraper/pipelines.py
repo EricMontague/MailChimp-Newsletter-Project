@@ -3,6 +3,8 @@
 
 from http import HTTPStatus
 from scrapy.exceptions import CloseSpider
+from scrapy.pipelines.images import ImagesPipeline
+from scrapy.http import Request
 from performance_scraper.flask_api.api_client import FlaskAPIClient
 from performance_scraper.flask_api.auth import AuthManager
 from performance_scraper.flask_api.exceptions import FlaskAPIException
@@ -43,8 +45,8 @@ class APIPipeline(object):
             artist_resource = self.store_artist_info(dict(artist_item))
 
         # update artist's image
-        if artist_item.get("image") is not None:
-            self.store_artist_image(artist_resource["id"], dict(artist_item))
+        if performance_item.get("image") is not None:
+            self.store_artist_image(artist_resource["id"], performance_item["image"])
         # update performance item to include venue and artist id's that will
         # need to be sent in the payload to the API
         performance_item["venue_id"] = venue_resource["id"]
@@ -87,12 +89,32 @@ class APIPipeline(object):
         # Create artist resource. Returns None if artist already exists
         return self._api_client.create_artist(artist_item)
 
-    def store_artist_image(self, artist_id, artist_item):
+    def store_artist_image(self, artist_id, image):
         """Store the artist's image by making a call to the Flask API."""
         # attempt to update artist's image if one was found on the scraped website
-        self._api_client.update_artist_image(artist_id, artist_item["image"])
-
+        with open(image, "rb") as image_file:
+            self._api_client.upload_artist_image(artist_id, image_file)
+    
     def store_performance_info(self, performance_item):
         """Store the performance information by making a call to the Flask API."""
         self._api_client.create_performance(performance_item)
 
+
+
+class ArtistImagePipeline(ImagesPipeline):
+    """Class to process scraped images."""
+
+    def get_media_requests(self, item, info):
+        """Return a list of request objects for each image url."""
+        requests = []
+        image = item.get(self.images_urls_field)
+        if image is not None:
+            requests = [Request(x) for x in image["url"]]
+        return requests
+
+    def item_completed(self, results, item, info):
+        """Add the image file path to the item, before returning said item."""
+        image = item.get(self.images_urls_field)
+        if image is not None:
+            image[self.images_result_field] = [x for ok, x in results if ok]
+        return item
