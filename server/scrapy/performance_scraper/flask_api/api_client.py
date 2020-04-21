@@ -36,11 +36,15 @@ class FlaskAPIClient:
         """Send a GET request to the API to retrieve an artist by name."""
         return self._internal_call("GET", f"artists/{name}")
 
-    def update_artist_image(self, artist_id, payload):
+    def upload_artist_image(self, artist_id, payload):
         """Send a PUT request to the API to replace an artist's image. If an image 
         doesn't exist, then one is created. Returns None.
         """
-        return self._internal_call("PUT", f"artists/{artist_id}/images", payload=payload)
+        #Scrapy automatically uses Pillow to convert all images to JPEG by default
+        content_type = "image/jpeg"
+        return self._internal_call(
+            "PUT", f"artists/{artist_id}/images", payload=payload, content_type=content_type
+        )
 
     def create_performance(self, payload):
         """Send a POST request to the API to create a performance resource.
@@ -63,12 +67,14 @@ class FlaskAPIClient:
         headers["Accept"] = "application/json"
         return headers
 
-    def _internal_call(self, method, url, payload=None, query_string_parameters=None):
+    def _internal_call(self, method, url, payload=None, query_string_parameters=None, **kwargs):
         """Method for making calls to the API."""
         data = {}
         retries = 5
         json_response = None
         headers = self._get_headers()
+        if kwargs.get("content_type"):
+            headers["Content-Type"] = kwargs["content_type"]
         while retries > 0:
             if payload is not None:
                 data = json.dumps(payload)
