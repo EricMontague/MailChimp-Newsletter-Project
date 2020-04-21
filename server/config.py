@@ -4,7 +4,7 @@
 import os
 
 
-PROJECT_ROOT = os.path.abspath(os.path.dirname(__file__))
+basedir = os.path.abspath(os.path.dirname(__file__))
 
 
 class BaseConfig:
@@ -22,6 +22,9 @@ class BaseConfig:
     SQLALCHEMY_DATABASE_URI = f"postgresql://{DB_USER}:{DB_PASSWORD}@{DB_HOST}:{DB_PORT}/{DB_NAME}"
     CSRF_ENABLED = True #check later to see if this is really needed
     SQLALCHEMY_TRACK_MODIFICATIONS = False
+    DEFAULT_RESOURCES_PER_PAGE = 50
+    UPLOAD_FOLDER = basedir + "/app/static/artist_images"
+    ALLOWED_FILE_EXTENSIONS = {"png", "jpg", "jpeg"}
 
     @staticmethod
     def init_app(app):
