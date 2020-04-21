@@ -2,7 +2,7 @@
 
 
 from datetime import datetime
-from scrapy.spiders import CrawlSpider, Rule
+from scrapy.spiders import CrawlSpider
 from performance_scraper.items import PerformanceItem, ArtistItem
 from performance_scraper.venues import heritage_item
 
@@ -14,7 +14,9 @@ class HeritageSpider(CrawlSpider):
     start_urls = ["https://heritage.life/events/"]
 
     def parse(self, response):
-        """Parse the response and return PerformanceItem instances."""
+        """Parse the html for performance information and 
+        yield PerformanceItem instances.
+        """
         event_list_container = response.css("dl.simcal-events-list-container")
         for event_date, event_details in zip(
             event_list_container.css("dt.simcal-day-label"), event_list_container.css("dd.simcal-day")
@@ -33,6 +35,7 @@ class HeritageSpider(CrawlSpider):
                 performance_item["url"] = self.start_urls[0]
                 performance_item["start_datetime"] = self.format_datetime(date, start_time)
                 performance_item["end_datetime"] = self.format_datetime(date, end_time)
+                performance_item["url"] = self.start_urls[0]
                 
                 artist_item["name"] = title
 
