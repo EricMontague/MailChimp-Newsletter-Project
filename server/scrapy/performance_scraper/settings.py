@@ -8,7 +8,7 @@ BASEDIR = os.path.abspath(os.path.dirname(__file__))
 SCRAPY_USERNAME = os.environ.get("SCRAPY_USERNAME")
 SCRAPY_PASSWORD = os.environ.get("SCRAPY_PASSWORD")
 SCRAPY_EMAIL = os.environ.get("SCRAPY_EMAIL")
-
+IMAGE_DOWNLOAD_DIRECTORY = BASEDIR + "/artist_images"
 TOKEN_FILE_PATH =  BASEDIR + "/flask_api/token.json"
 
 BOT_NAME = 'performance_scraper'
@@ -67,7 +67,7 @@ SPIDER_MIDDLEWARES = {
 # Configure item pipelines
 # See http://docs.scrapy.org/en/latest/topics/item-pipeline.html
 ITEM_PIPELINES = {
-   "scrapy.pipelines.images.ImagesPipeline": 1,
+   "performance_scraper.pipelines.ArtistImagePipeline": 1,
    "performance_scraper.pipelines.APIPipeline": 300
 }
 
