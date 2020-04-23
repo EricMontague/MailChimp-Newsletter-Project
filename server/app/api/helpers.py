@@ -1,6 +1,7 @@
 """This module contains helper functions for the api blueprint."""
 
 
+import os
 from flask import request, url_for, current_app
 from datetime import datetime
 
@@ -45,3 +46,8 @@ def allowed_file_extension(filename):
     file_extension = filename.lower().split(".")[-1]
     return file_extension in current_app.config["ALLOWED_FILE_EXTENSIONS"]
     
+
+def create_directory(directory):
+    """Create the given directory if it doesn't already exist."""
+    if not os.path.exists(directory):
+        os.makedirs(directory)
