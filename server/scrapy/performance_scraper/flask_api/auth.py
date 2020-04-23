@@ -62,18 +62,18 @@ class AuthManager:
                 json=payload,
                 headers=self._get_headers()
             )
-            response.raise_for_status()
             token = response.json()["access_token"]
+            response.raise_for_status()
         except requests.exceptions.HTTPError:
             #attempt to retrieve error message
             try:
                 message = response.json()["message"]
             except (ValueError, KeyError):
                 message = "An error occurred."
-                raise FlaskAPIException(
-                    response.status_code,
-                    f"{response.url}:\n {message}"
-                )
+            raise FlaskAPIException(
+                response.status_code,
+                f"{response.url}:\n {message}"
+            )
         return token
 
     def _get_headers(self):
