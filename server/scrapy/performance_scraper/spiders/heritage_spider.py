@@ -39,20 +39,21 @@ class HeritageSpider(CrawlSpider):
                 
                 artist_item["name"] = title
 
-                performance_item["artist"] = artist_item
-                performance_item["venue"] = heritage_item
+                performance_item["artist"] = dict(artist_item)
+                performance_item["venue"] = dict(heritage_item)
                 yield performance_item
     
     def format_datetime(self, date_string, time_string):
         """Given a time and date in string form, format the
         date so that it is in the format month/day/year hour:minute.
         """
-        month = str(datetime.now().month)
-        day = date_string.split()[2][:-2]
+        split_date = date_string.split()
+        month = str(datetime.strptime(split_date[-2], "%B").month)
+        number_day = split_date[-1][:-2] #numeric day. e.g. 13
         year = str(datetime.now().year)
         #convert time into military time
         time = datetime.strptime(time_string, "%I:%M %p").strftime("%H:%M")
-        return month + "/" + day +"/" + year + " " + time
+        return month + "/" + number_day +"/" + year + " " + time
 
 
 
