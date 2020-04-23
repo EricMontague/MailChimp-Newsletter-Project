@@ -23,7 +23,7 @@ class BaseConfig:
     CSRF_ENABLED = True #check later to see if this is really needed
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     DEFAULT_RESOURCES_PER_PAGE = 50
-    UPLOAD_FOLDER = basedir + "/app/static/artist_images"
+    UPLOAD_DIRECTORY = basedir + "/app/static/artist_images"
     ALLOWED_FILE_EXTENSIONS = {"png", "jpg", "jpeg"}
 
     @staticmethod
