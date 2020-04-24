@@ -62,8 +62,8 @@ class AuthManager:
                 json=payload,
                 headers=self._get_headers()
             )
-            token = response.json()["access_token"]
             response.raise_for_status()
+            token = response.json()["access_token"]
         except requests.exceptions.HTTPError:
             #attempt to retrieve error message
             try:

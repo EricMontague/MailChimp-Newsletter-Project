@@ -86,8 +86,8 @@ class FlaskAPIClient:
                     headers=headers,
                     **data,
                 )
-                json_response = response.json()
                 response.raise_for_status()
+                json_response = response.json()
                 break
             except requests.exceptions.HTTPError:
                 #token is expired, need to retrieve a new one a try again
