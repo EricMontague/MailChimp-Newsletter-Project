@@ -28,6 +28,7 @@ class ParisBistroSpider(CrawlSpider):
         for event in event_list.css("div.vc_row.wpb_row.vc_inner.vc_row-fluid"):
             image_item = ImageItem()
             image_item["url"] = event.css("img").attrib["src"]
+            
             artist_item = ArtistItem()
             #artist's name is usually in the title, will clean this up on the backend later
             title = self.format_title(event.css("h2::text").getall()[1])
