@@ -4,6 +4,15 @@
 from performance_scraper.items import VenueItem
 
 
+#Chris' Jazz Cafe
+chris_jazz_item = VenueItem()
+chris_jazz_item["name"] = "Chris' Jazz Cafe"
+chris_jazz_item["street_address"] = "1421 Sansom St"
+chris_jazz_item["city"] = "Philadelphia"
+chris_jazz_item["state"] = "PA"
+chris_jazz_item["zip_code"] = "19102"
+
+
 #Heritage
 heritage_item = VenueItem()
 heritage_item["name"] = "Heritage"
@@ -45,3 +54,22 @@ exuberance_item["street_address"] = "1220 N. Mascher St."
 exuberance_item["city"] = "Philadelphia"
 exuberance_item["state"] = "PA"
 exuberance_item["zip_code"] = "19122"
+
+
+#Philadelphia Art Museum
+art_museum_item = VenueItem()
+art_museum_item["name"] = "The Philadelphia Art Museum"
+art_museum_item["street_address"] = "2600 Benjamin Franklin Parkway"
+art_museum_item["city"] = "Philadelphia"
+art_museum_item["state"] = "PA"
+art_museum_item["zip_code"] = "19130"
+
+
+#The Kimmel Center
+kimmel_center_item = VenueItem()
+kimmel_center_item["name"] = "The Kimmel Center"
+kimmel_center_item["street_address"] = "300 S Broad St."
+kimmel_center_item["city"] = "Philadelphia"
+kimmel_center_item["state"] = "PA"
+kimmel_center_item["zip_code"] = "19102"
+
