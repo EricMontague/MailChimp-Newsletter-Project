@@ -5,58 +5,54 @@ import os
 
 BASEDIR = os.path.abspath(os.path.dirname(__file__))
 
-SCRAPY_USERNAME = os.environ.get("SCRAPY_USERNAME")
-SCRAPY_PASSWORD = os.environ.get("SCRAPY_PASSWORD")
-SCRAPY_EMAIL = os.environ.get("SCRAPY_EMAIL")
+SCRAPY_USERNAME = os.environ.get("SCRAPY_USERNAME", "scrapy")
+SCRAPY_PASSWORD = os.environ.get("SCRAPY_PASSWORD", "password")
+SCRAPY_EMAIL = os.environ.get("SCRAPY_EMAIL", "scrapy@gmail.com")
 IMAGE_DOWNLOAD_DIRECTORY = BASEDIR + "/artist_images"
 TOKEN_FILE_PATH =  BASEDIR + "/flask_api/token.json"
 
-BOT_NAME = 'performance_scraper'
+BOT_NAME = "performance_scraper"
 
-SPIDER_MODULES = ['performance_scraper.spiders']
-NEWSPIDER_MODULE = 'performance_scraper.spiders'
+SPIDER_MODULES = ["performance_scraper.spiders"]
+NEWSPIDER_MODULE = "performance_scraper.spiders"
 
 
-# Crawl responsibly by identifying yourself (and your website) on the user-agent
-#USER_AGENT = 'performance_scraper (+http://www.yourdomain.com)'
-
-# Obey robots.txt rules
 ROBOTSTXT_OBEY = True
 
 # Configure maximum concurrent requests performed by Scrapy (default: 16)
 CONCURRENT_REQUESTS = 16
 
 # Configure a delay for requests for the same website (default: 0)
-# See http://docs.scrapy.org/en/latest/topics/settings.html#download-delay
-# See also autothrottle settings and docs
 DOWNLOAD_DELAY = 3
+
 # The download delay setting will honor only one of:
 CONCURRENT_REQUESTS_PER_DOMAIN = 16
-#CONCURRENT_REQUESTS_PER_IP = 16
 
 # Disable cookies (enabled by default)
 COOKIES_ENABLED = False
 
-# Disable Telnet Console (enabled by default)
-#TELNETCONSOLE_ENABLED = False
 
 # Override the default request headers:
 DEFAULT_REQUEST_HEADERS = {
-  'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
-  'Accept-Language': 'en',
+  "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
+  "Accept-Language": "en",
 }
 
-# Enable or disable spider middlewares
-# See http://docs.scrapy.org/en/latest/topics/spider-middleware.html
 SPIDER_MIDDLEWARES = {
-   'performance_scraper.middlewares.PerformanceScraperSpiderMiddleware': 543,
+   "scrapy_splash.SplashDeduplicateArgsMiddleware": 100
 }
 
 # Enable or disable downloader middlewares
-# See http://docs.scrapy.org/en/latest/topics/downloader-middleware.html
-#DOWNLOADER_MIDDLEWARES = {
-#    'performance_scraper.middlewares.PerformanceScraperDownloaderMiddleware': 543,
-#}
+DOWNLOADER_MIDDLEWARES = {
+   "scrapy_splash.SplashCookiesMiddleware": 723,
+   "scrapy_splash.SplashMiddleware": 725,
+   "scrapy.downloadermiddlewares.httpcompression.HttpCompressionMiddleware": 810,
+   "performance_scraper.middlewares.PerformanceScraperDownloaderMiddleware": 543,
+}
+
+SPLASH_URL = "http://0.0.0.0:8050"
+DUPEFILTER_CLASS = "scrapy_splash.SplashAwareDupeFilter"
+HTTPCACHE_STORAGE = "scrapy_splash.SplashAwareFSCacheStorage"
 
 # Enable or disable extensions
 # See http://docs.scrapy.org/en/latest/topics/extensions.html
