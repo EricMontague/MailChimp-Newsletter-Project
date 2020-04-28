@@ -46,17 +46,29 @@ class ChrisJazzCafeSpider(CrawlSpider):
         performance_item["title"] = artist_item["name"]
         performance_item["description"] = response.css("#mobile-descr div.custom-content:first-child p::text").get()
         start_time = response.css("div.event-divider a:first-child::text").get().replace(" ", "")
-        performance_item["start_datetime"] = date.strftime("%m/%d/%Y") + " " + self.convert_to_military_time(start_time)
+        performance_item["start_datetime"] = self.format_datetime(date, start_time)
         end_time = response.css("div.event-divider a:last-child::text").get().replace(" ", "")
-        performance_item["end_datetime"] = date.strftime("%m/%d/%Y") + " " + self.convert_to_military_time(end_time)
+        performance_item["end_datetime"] = self.format_datetime(date, end_time, end=True)
         performance_item["url"] = response.url
 
         performance_item["venue"] = dict(chris_jazz_item)
         performance_item["artist"] = dict(artist_item)
         yield performance_item
 
-    def convert_to_military_time(self, time):
-        """Convert the given time to military time."""
-        return datetime.strptime(time, "%H:%M%p").strftime("%H:%M")
+    def format_datetime(self, datetime_object, time_string, end=False):
+        """Given a time in string form and a datetime object, format the
+        date so that it is in the format month/day/year hour:minute.
+        """
+        time_object = datetime.strptime(time_string, "%I:%M%p").time()
+        final_datetime = datetime.combine(datetime_object.date(), time_object)
+        #Chris' website gives starting and ending set times instead of starting and ending event times
+        if end:
+            #If the second set starts at 10pm, then it will usually end at Midnight
+            if final_datetime.hour == 22:
+                final_datetime = final_datetime + timedelta(hours=2)
+            #if the second set starts at 11:30pm, then it will usually end at 2am
+            elif final_datetime.hour == 23 and final_datetime.minutes == 30:
+                final_datetime = final_datetime + timedelta(hours=2, minutes=30)
+        return final_datetime.strftime("%m/%d/%Y %H:%M")
 
 
