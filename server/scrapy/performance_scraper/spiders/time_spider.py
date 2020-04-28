@@ -18,11 +18,7 @@ class TimeSpider(CrawlSpider):
     function main(splash, args)
     assert(splash:go(args.url))
     assert(splash:wait(args.wait))
-    return {
-        html = splash:html(),
-        png = splash:png(),
-        har = splash:har(),
-    }
+    return splash:html()   
     end
     """
 
