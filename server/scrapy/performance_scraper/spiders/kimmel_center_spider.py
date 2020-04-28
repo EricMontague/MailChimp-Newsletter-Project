@@ -17,3 +17,4 @@ class KimmelCenterSpider(CrawlSpider):
         """Parse the html for performance information and 
         yield PerformanceItem instances.
         """
+        pass
