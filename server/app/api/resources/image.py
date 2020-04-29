@@ -10,7 +10,7 @@ from marshmallow import ValidationError
 from app.models import Image, Artist
 from app.extensions import db
 from http import HTTPStatus
-from app.api.helpers import allowed_file_extension, create_directory
+from app.api.helpers import allowed_file_extension, create_directory, create_filepath
 
 
 class ArtistImageListAPI(Resource):
@@ -49,22 +49,31 @@ class ArtistImageListAPI(Resource):
                 },
                 HTTPStatus.BAD_REQUEST,
             )
-        create_directory(current_app.config["UPLOAD_DIRECTORY"])
-        #delete the artist's current image from the directory if one exists
-        if artist.image is not None:
-            try:
-                os.remove(artist.image.path)
-            except FileNotFoundError:
-                pass
         filename = secure_filename(file.filename)
-        destination = current_app.config["UPLOAD_DIRECTORY"] + "/" + filename
-        file.save(destination)
-        #the below block isn't in the above if statement because I want to separate out the
-        #file system operations from the database operations
-        if artist.image is None:
-            image = Image(path=destination)
-            artist.image = image
+        create_directory(current_app.config["UPLOAD_DIRECTORY"])
+        artist_image = artist.image
+        # creating new image for artist
+        if artist_image is None:
+            existing_image = Image.query.filter_by(original_filename=filename).first()
+            if existing_image is None:
+                version = 1
+            # another artist already has this image
+            # need to increment the version number when saving the image
+            else:
+                version = existing_image.version + 1
+        # replacing existing image
         else:
-            artist.image.path = destination 
+            version = 1
+            # duplicate image, no action is needed
+            if artist_image.original_filename == filename:
+                return "", HTTPStatus.NO_CONTENT
+            else: #not a duplicate, need to delete the current image from filesystem to make room
+                if os.path.exists(artist.image.path):
+                    os.remove(artist.image.path)
+        destination = create_filepath(filename, version=version)
+        file.save(destination)
+        image = Image(original_filename=filename, path=destination, version=version)
+        artist.image = image
         db.session.commit()
         return "", HTTPStatus.NO_CONTENT
+
