@@ -44,10 +44,26 @@ def allowed_file_extension(filename):
     if "." not in filename:
         return False
     file_extension = filename.lower().split(".")[-1]
-    return file_extension in current_app.config["ALLOWED_FILE_EXTENSIONS"]
+    return file_extension in current_app.config["ALLOWED_EXTENSIONS"]
     
 
 def create_directory(directory):
     """Create the given directory if it doesn't already exist."""
     if not os.path.exists(directory):
         os.makedirs(directory)
+
+
+def create_filepath(filename, version=1):
+    """Given a filename and version, return the filepath where
+    the file will be stored as a string.
+    """
+    extensions = current_app.config["ALLOWED_EXTENSIONS"]
+    for extension in extensions:
+        index = filename.find(extension)
+        #creaate new filename in the format of my_old_file_2.jpg
+        if index != - 1:
+            new_filename = filename[:index - 1] + "_" + str(version) + "." + extension
+            break
+    filepath = current_app.config["UPLOAD_DIRECTORY"] + "/" + new_filename
+    return filepath
+
