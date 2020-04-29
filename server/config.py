@@ -24,7 +24,7 @@ class BaseConfig:
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     DEFAULT_RESOURCES_PER_PAGE = 50
     UPLOAD_DIRECTORY = basedir + "/app/static/artist_images"
-    ALLOWED_FILE_EXTENSIONS = {"png", "jpg", "jpeg"}
+    ALLOWED_EXTENSIONS = {"png", "jpg", "jpeg"}
 
     @staticmethod
     def init_app(app):
