@@ -62,14 +62,13 @@ class ArtMuseumSpider(CrawlSpider):
                         },
                     )
 
-    def format_datetimes(self, datetimes):
+    def format_datetimes(self, datetimes, format="%B %d %Y %I:%M %p"):
         """Given start and ending times of an event, return a tuple
         consisting of a start_datetime object and an end_datetime object.
         """
         date, times, space_character = datetimes.split(", ")
         start_time, end_time = times.split(" - ")
         year = datetime.now().strftime("%Y")
-        format = "%B %d %Y %I:%M %p"
         return (
             datetime.strptime(
                 date + " " + year + " " + start_time.replace(".", ""), format
@@ -79,9 +78,8 @@ class ArtMuseumSpider(CrawlSpider):
             ),
         )
 
-    def parse_event(self, response, start_datetime, end_datetime):
+    def parse_event(self, response, start_datetime, end_datetime, format="%m/%d/%Y %H:%M"):
         """Parse the html for a single event page and yield a Performance Item."""
-
         image_item = ImageItem()
         image_item["url"] = response.css("figure.hero img").attrib["src"]
 
@@ -97,8 +95,8 @@ class ArtMuseumSpider(CrawlSpider):
         performance_item["description"] = (
             response.css("#description").css("div.content span p::text").get()
         )
-        performance_item["start_datetime"] = start_datetime.strftime("%m/%d/%Y %H:%M")
-        performance_item["end_datetime"] = end_datetime.strftime("%m/%d/%Y %H:%M")
+        performance_item["start_datetime"] = start_datetime.strftime(format)
+        performance_item["end_datetime"] = end_datetime.strftime(format)
         performance_item["venue"] = dict(art_museum_item)
         performance_item["artist"] = dict(artist_item)
         yield performance_item
