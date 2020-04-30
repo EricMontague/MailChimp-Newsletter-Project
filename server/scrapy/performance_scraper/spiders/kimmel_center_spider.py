@@ -47,14 +47,13 @@ class KimmelCenterSpider(CrawlSpider):
                 start_datetime = self.format_datetime(date, time)
                 if start_datetime >= datetime.now() and start_datetime < datetime.now() + timedelta(weeks=4):
                     event_link = event.css("div.event-details a.data-ng-href").attrib["href"]
-                    format = "%m/%d/%Y %H:%M"
                     yield SplashRequest(
                         url=event_link,
                         method="GET",
                         endpoint="execute",
                         callback=self.parse_event,
                         args={"wait": 15.0, "lua_source": self.lua_script},
-                        cb_kwargs={"start_datetime": start_datetime, "format": format}
+                        cb_kwargs={"start_datetime": start_datetime}
                     )
                 else:
                     raise CloseSpider(reason="All events within one month have been processed.")
@@ -65,7 +64,7 @@ class KimmelCenterSpider(CrawlSpider):
         """
         return datetime.strptime(date_string + " " + time_string, format)
         
-    def parse_event(self, response, start_datetime, format):
+    def parse_event(self, response, start_datetime, format="%m/%d/%Y %H:%M"):
         """Parse the html for a single event page and yield a Performance Item."""
         event_type = response.css("span.pdp-also-more a.cta-link.pdp-also-link::text").get()
         #only want to parse html for jazz events
