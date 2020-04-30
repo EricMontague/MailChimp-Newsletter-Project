@@ -2,7 +2,7 @@
 
 
 from http import HTTPStatus
-from scrapy.exceptions import CloseSpider
+from scrapy.exceptions import CloseSpider, DropItem
 from scrapy.pipelines.images import ImagesPipeline
 from scrapy.http import Request
 from performance_scraper.flask_api.api_client import FlaskAPIClient
@@ -31,6 +31,8 @@ class APIPipeline(object):
 
     def process_item(self, performance_item, spider):
         """Send scraped data to the Flask API to be stored."""
+        if not performance_item:
+            raise DropItem("Performance Item is Empty")
         image_item = None
         venue_item = performance_item.pop("venue")
         artist_item = performance_item.pop("artist")
@@ -112,6 +114,8 @@ class ArtistImagePipeline(ImagesPipeline):
 
     def get_media_requests(self, item, info):
         """Return a list of request objects for each image url."""
+        if not item:
+            raise DropItem("Item is Empty")
         requests = []
         image = item["artist"].get(self.images_urls_field)
         if image is not None:
@@ -120,9 +124,12 @@ class ArtistImagePipeline(ImagesPipeline):
 
     def item_completed(self, results, item, info):
         """Add the image file path to the item, before returning said item."""
+        if not item:
+            raise DropItem("Item is Empty")
         image = item["artist"].get(self.images_urls_field)
         if image is not None:
             completed, data = results[0]
             if completed:
                 image[self.images_result_field] = data["path"]
         return item
+
