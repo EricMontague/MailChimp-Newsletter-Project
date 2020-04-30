@@ -54,14 +54,8 @@ SPLASH_URL = "http://0.0.0.0:8050"
 DUPEFILTER_CLASS = "scrapy_splash.SplashAwareDupeFilter"
 HTTPCACHE_STORAGE = "scrapy_splash.SplashAwareFSCacheStorage"
 
-# Enable or disable extensions
-# See http://docs.scrapy.org/en/latest/topics/extensions.html
-#EXTENSIONS = {
-#    'scrapy.extensions.telnet.TelnetConsole': None,
-#}
 
 # Configure item pipelines
-# See http://docs.scrapy.org/en/latest/topics/item-pipeline.html
 ITEM_PIPELINES = {
    "performance_scraper.pipelines.ArtistImagePipeline": 1,
    "performance_scraper.pipelines.APIPipeline": 300
@@ -72,7 +66,6 @@ IMAGES_URLS_FIELD = "image"
 IMAGES_RESULT_FIELD = "path"
 
 # Enable and configure the AutoThrottle extension (disabled by default)
-# See http://docs.scrapy.org/en/latest/topics/autothrottle.html
 AUTOTHROTTLE_ENABLED = True
 # The initial download delay
 AUTOTHROTTLE_START_DELAY = 5
@@ -84,11 +77,3 @@ AUTOTHROTTLE_TARGET_CONCURRENCY = 1.0
 # Enable showing throttling stats for every response received:
 #AUTOTHROTTLE_DEBUG = False
 
-
-# Enable and configure HTTP caching (disabled by default)
-# See http://docs.scrapy.org/en/latest/topics/downloader-middleware.html#httpcache-middleware-settings
-#HTTPCACHE_ENABLED = True
-#HTTPCACHE_EXPIRATION_SECS = 0
-#HTTPCACHE_DIR = 'httpcache'
-#HTTPCACHE_IGNORE_HTTP_CODES = []
-#HTTPCACHE_STORAGE = 'scrapy.extensions.httpcache.FilesystemCacheStorage'
