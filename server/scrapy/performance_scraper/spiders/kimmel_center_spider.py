@@ -47,9 +47,6 @@ class KimmelCenterSpider(CrawlSpider):
                 start_datetime = self.format_datetime(date, time)
                 if start_datetime >= datetime.now() and start_datetime < datetime.now() + timedelta(weeks=4):
                     event_link = event.css("div.event-details > a").attrib["href"]
-                    print("#############")
-                    print(event_link)
-                    print("#############")
                     yield SplashRequest(
                         url=self.domain + event_link,
                         method="GET",

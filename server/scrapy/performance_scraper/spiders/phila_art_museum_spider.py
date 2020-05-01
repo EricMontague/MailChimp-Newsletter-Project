@@ -90,7 +90,7 @@ class ArtMuseumSpider(CrawlSpider):
         artist_item["image"] = dict(image_item)
 
         performance_item = PerformanceItem()
-        performance_item["url"] = self.start_urls[0]
+        performance_item["url"] = response.url
         performance_item["title"] = response.css("h1.headline span::text").get()
         performance_item["description"] = (
             response.css("#description").css("div.content span p::text").get()
