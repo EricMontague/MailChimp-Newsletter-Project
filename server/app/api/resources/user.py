@@ -47,7 +47,7 @@ class UserAPI(Resource):
             return {"message": "User could not be found."}, HTTPStatus.NOT_FOUND
         db.session.delete(user)
         db.session.commit()
-        return "", HTTPStatus.NO_CONTENT
+        return {}, HTTPStatus.NO_CONTENT
 
 
 class UserListAPI(Resource):

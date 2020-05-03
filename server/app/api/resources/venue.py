@@ -49,7 +49,7 @@ class VenueAPI(Resource):
             return {"message": "Venue could not be found."}, HTTPStatus.NOT_FOUND
         db.session.delete(venue)
         db.session.commit()
-        return "", HTTPStatus.NO_CONTENT
+        return {}, HTTPStatus.NO_CONTENT
 
 
 class VenueByNameAPI(Resource):

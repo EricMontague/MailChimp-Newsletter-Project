@@ -50,7 +50,7 @@ class PerformanceAPI(Resource):
             return {"message": "Performance could not be found."}, HTTPStatus.NOT_FOUND
         db.session.delete(performance)
         db.session.commit()
-        return "", HTTPStatus.NO_CONTENT
+        return {}, HTTPStatus.NO_CONTENT
 
 
 class PerformanceListAPI(Resource):

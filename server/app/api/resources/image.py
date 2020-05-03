@@ -75,5 +75,5 @@ class ArtistImageListAPI(Resource):
         image = Image(original_filename=filename, path=destination, version=version)
         artist.image = image
         db.session.commit()
-        return "", HTTPStatus.NO_CONTENT
+        return {}, HTTPStatus.NO_CONTENT
 

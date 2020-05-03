@@ -37,7 +37,7 @@ class ArtistAPI(Resource):
         artist.bio = updated_artist.bio
         artist.website = updated_artist.website
         db.session.commit()
-        return "", HTTPStatus.NO_CONTENT
+        return {}, HTTPStatus.NO_CONTENT
 
     def delete(self, artist_id):
         """Delete a single artist resource."""
@@ -46,7 +46,7 @@ class ArtistAPI(Resource):
             return {"message": "Artist could not be found."}, HTTPStatus.NOT_FOUND
         db.session.delete(artist)
         db.session.commit()
-        return "", HTTPStatus.NO_CONTENT
+        return {}, HTTPStatus.NO_CONTENT
 
 
 class ArtistByNameAPI(Resource):
