@@ -20,11 +20,14 @@ class BaseConfig:
     DB_HOST = "localhost"
     DB_PORT = 5432
     SQLALCHEMY_DATABASE_URI = f"postgresql://{DB_USER}:{DB_PASSWORD}@{DB_HOST}:{DB_PORT}/{DB_NAME}"
-    CSRF_ENABLED = True #check later to see if this is really needed
     SQLALCHEMY_TRACK_MODIFICATIONS = False
+    CSRF_ENABLED = True #check later to see if this is really needed
     DEFAULT_RESOURCES_PER_PAGE = 50
     UPLOAD_DIRECTORY = basedir + "/app/static/artist_images"
     ALLOWED_EXTENSIONS = {"png", "jpg", "jpeg"}
+    CELERY_BROKER_URL = os.environ.get("CELERY_BROKER_URL", "redis://localhost:6379/0")
+    CELERY_RESULTS_EXPIRE = 60 * 60 * 24 * 2, #two days
+    CELERY_TIMEZONE = "US/Eastern"
 
     @staticmethod
     def init_app(app):
