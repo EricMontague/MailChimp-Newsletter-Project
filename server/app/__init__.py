@@ -3,9 +3,10 @@ application instance.
 """
 
 
+import os
 from flask import Flask
 from config import CONFIG_NAME_MAPPER
-from .extensions import db, ma, migrate, jwt
+from app.extensions import db, ma, migrate, jwt, celery
 
 
 def create_app(config_name):
@@ -30,3 +31,32 @@ def register_blueprints(app):
     from .auth.views import auth_blueprint
     app.register_blueprint(api_blueprint)
     app.register_blueprint(auth_blueprint)
+
+
+def init_celery(app=None):
+    """Return a Celery instance after setting up its configurations."""
+    from celery.schedules import crontab
+    app = app or create_app(os.environ.get("FLASK_ENV") or "default")
+    celery.name = __name__
+    celery.conf.broker_url = app.config["CELERY_BROKER_URL"]
+    celery.conf.update(app.config)
+    celery.conf.beat_schedule = {
+        "crawl-every-sunday-morning": {
+            "task": "performance_scraper.tasks.start_crawl",
+            "schedule": crontab(hour=9, minute=0, day_of_week=0),
+            "args": []
+        }
+    }
+
+
+    class ContextTask(celery.Task):
+        """Make celery tasks work within the Flask app context."""
+
+        def __call__(self, *args, **kwargs):
+            with app.app_context():
+                return self.run(*args, **kwargs)
+    
+
+    celery.Task = ContextTask
+    return celery
+
