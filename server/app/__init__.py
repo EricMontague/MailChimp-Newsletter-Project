@@ -36,13 +36,12 @@ def register_blueprints(app):
 def init_celery(app=None):
     """Return a Celery instance after setting up its configurations."""
     from celery.schedules import crontab
-    app = app or create_app(os.environ.get("FLASK_ENV") or "default")
+    app = app or create_app(os.environ.get("FLASK_CONFIG") or "default")
     celery.name = __name__
-    celery.conf.broker_url = app.config["CELERY_BROKER_URL"]
     celery.conf.update(app.config)
     celery.conf.beat_schedule = {
         "crawl-every-sunday-morning": {
-            "task": "performance_scraper.tasks.start_crawl",
+            "task": "app.scrapy.performance_scraper.tasks.scheduled_crawl",
             "schedule": crontab(hour=9, minute=0, day_of_week=0),
             "args": []
         }
