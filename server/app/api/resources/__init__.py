@@ -18,4 +18,5 @@ from app.api.resources.venue import (
     VenueListAPI
 )
 from app.api.resources.user import UserAPI, UserListAPI
+from app.api.resources.crawl import CrawlTaskAPI, CrawlTaskListAPI
 
