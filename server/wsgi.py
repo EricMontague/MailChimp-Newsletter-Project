@@ -10,7 +10,7 @@ from app.models import User, Artist, Performance, Venue, Image
 from app.extensions import db
 
 
-app = create_app(os.environ.get("FLASK_ENV") or "default")
+app = create_app(os.environ.get("FLASK_CONFIG") or "default")
 
 
 @app.cli.command()
