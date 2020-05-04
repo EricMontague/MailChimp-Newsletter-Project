@@ -33,11 +33,10 @@ class APIPipeline(object):
         """Send scraped data to the Flask API to be stored."""
         if not performance_item:
             raise DropItem("Performance Item is Empty")
-        image_item = None
+        
         venue_item = performance_item.pop("venue")
         artist_item = performance_item.pop("artist")
-        if artist_item.get("image") is not None:
-            image_item = artist_item.pop("image")
+        image_item = artist_item.pop("image", None)
 
         # attempt to get venue resource from API. If it doesn't exist, create it
         venue_resource = self.retrieve_venue_info(venue_item)
