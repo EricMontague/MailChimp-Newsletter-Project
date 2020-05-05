@@ -7,6 +7,7 @@ import os
 from flask import Flask
 from config import CONFIG_NAME_MAPPER
 from app.extensions import db, ma, migrate, jwt, celery
+from app.scrapy.performance_scraper.tasks import SPIDERS
 
 
 def create_app(config_name):
@@ -43,7 +44,7 @@ def init_celery(app=None):
         "crawl-every-sunday-morning": {
             "task": "app.scrapy.performance_scraper.tasks.scheduled_crawl",
             "schedule": crontab(hour=9, minute=0, day_of_week=0),
-            "args": []
+            "args": SPIDERS
         }
     }
 
