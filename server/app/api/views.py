@@ -19,7 +19,8 @@ from app.api.resources import (
     UserAPI,
     UserListAPI,
     CrawlTaskAPI,
-    CrawlTaskListAPI
+    CrawlTaskStatusAPI,
+    CrawlGroupAPI
 )
 from app.api.schemas import (
     ArtistSchema,
@@ -132,12 +133,17 @@ api.add_resource(
 #Scrapy crawls executed by Celery
 api.add_resource(
     CrawlTaskAPI,
-    "/crawl/<int:task_id>",
+    "/crawl",
     endpoint="crawl"
 )
 api.add_resource(
-    CrawlTaskListAPI,
-    "/crawl_list",
-    endpoint="crawl_list"
+    CrawlTaskStatusAPI,
+    "/crawl_status/<int:task_id>",
+    endpoint="crawl_status"
+)
+api.add_resource(
+    CrawlGroupAPI,
+    "/group_crawl",
+    endpoint="group_crawl"
 )
 
