@@ -6,8 +6,7 @@ application instance.
 import os
 from flask import Flask
 from config import CONFIG_NAME_MAPPER
-from app.extensions import db, ma, migrate, jwt, celery
-from app.scrapy.performance_scraper.tasks import SPIDERS
+from app.extensions import db, ma, migrate, jwt
 
 
 def create_app(config_name):
@@ -28,35 +27,9 @@ def configure_extensions(app):
 
 def register_blueprints(app):
     """Register all blueprints for the application."""
-    from .api.views import api_blueprint
-    from .auth.views import auth_blueprint
+    from app.api.views import api_blueprint
+    from app.auth.views import auth_blueprint
     app.register_blueprint(api_blueprint)
     app.register_blueprint(auth_blueprint)
 
-
-def init_celery(app=None):
-    """Return a Celery instance after setting up its configurations."""
-    from celery.schedules import crontab
-    app = app or create_app(os.environ.get("FLASK_CONFIG") or "default")
-    celery.name = __name__
-    celery.conf.update(app.config)
-    celery.conf.beat_schedule = {
-        "crawl-every-sunday-morning": {
-            "task": "app.scrapy.performance_scraper.tasks.scheduled_crawl",
-            "schedule": crontab(hour=9, minute=0, day_of_week=0),
-            "args": SPIDERS
-        }
-    }
-
-
-    class ContextTask(celery.Task):
-        """Make celery tasks work within the Flask app context."""
-
-        def __call__(self, *args, **kwargs):
-            with app.app_context():
-                return self.run(*args, **kwargs)
-    
-
-    celery.Task = ContextTask
-    return celery
 
