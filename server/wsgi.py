@@ -11,6 +11,8 @@ from app.extensions import db
 
 
 app = create_app(os.environ.get("FLASK_CONFIG") or "default")
+from app.celery_app import celery_app
+app.app_context().push()
 
 
 @app.cli.command()
