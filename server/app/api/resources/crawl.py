@@ -4,9 +4,8 @@ as Celery tasks.
 
 
 from flask import request, url_for
-from flask_restul import Resource
+from flask_restful import Resource
 from app.scrapy.performance_scraper.tasks import start_crawl, SPIDERS
-from scrapy import spiderloader
 from celery import group
 from http import HTTPStatus
 
@@ -14,7 +13,7 @@ from http import HTTPStatus
 SPIDER_NAMES = set(SPIDERS)
 
 
-class CrawlTaskAPI:
+class CrawlTaskAPI(Resource):
     """Class for executing a single Scrapy crawl."""
 
     def post(self):
@@ -44,43 +43,28 @@ class CrawlTaskAPI:
         response["message"] = "Single crawl started."
         response["uri"] = url_for("api.crawl_status", task_id=async_result.id)
         response["task_info"] = {
-            "state": async_result.state,
-            "spider_name": async_result.info.get("spider_name")
+            "status": async_result.status,
+            "spider_name": spider_name
         }
         return response, HTTPStatus.ACCEPTED
 
 
-class CrawlTaskStatusAPI:
+class CrawlTaskStatusAPI(Resource):
     """Class for checking the status of a single Scrapy crawl."""
 
     def get(self, task_id):
         """Return the status of the given task based on its id."""
-        async_result = start_crawl.AsyncResult(task_id)
-        if async_result.state == "PENDING":
-            #crawl hasn't been executed yet
-            response = {
-                "state": async_result.state,
-                "spider_name": async_result.info.get("spider_name"),
-                "status": "Pending..."
-            }
-        elif async_result.state != "FAILURE": #either success or retry
-            response = {
-                "state": async_result.state,
-                "spider_name": async_result.info.get("spider_name"),
-                "status": async_result.info.get("status", "")
-            }
-            if "result" in async_result.info:
-                response["result"] = async_result.info["result"]
-        else: #something else went wrong
-            response = {
-                "state": async_result.state,
-                "spider_name": async_result.info.get("spider_name"),
-                "status": str(async_result.info) #retrieve errors
-            }
+        #returns an AsyncResult object, but naming the variable 'task' makes this more readable
+        task = start_crawl.AsyncResult(task_id)
+        response = {"status": task.status}
+        if task.status == "SUCCESS":
+            response["result"] = task.info
+        elif task.status == "FAILURE":
+            response["errors"] = str(task.info)
         return response, HTTPStatus.OK
 
 
-class CrawlGroupAPI:
+class CrawlGroupAPI(Resource):
     """Class with methods for executing multiple crawls at once using Celery's 
     group function. Each group contains individual spiders that are performing run in parallel.
     """
@@ -129,7 +113,7 @@ class CrawlGroupAPI:
         response["invalid_spiders"] = invalid_spiders
         response["tasks"] = [
             {
-                "state": result.state,
+                "status": result.status,
                 "spider_name": result.info.get("spider_name"),
                 "uri": url_for("api.crawl_status", task_id=result.id),
             }
