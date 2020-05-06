@@ -11,7 +11,7 @@ from app.extensions import db
 
 
 app = create_app(os.environ.get("FLASK_CONFIG") or "default")
-from app.celery_app import celery_app
+from app.celery_app import celery_app #need wait until app instance is created to import
 app.app_context().push()
 
 
