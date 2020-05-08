@@ -33,4 +33,6 @@ class CeleryConfig:
             "args": SPIDERS
         }
     }
+    CELERY_PREFETCH_MULTIPLIER = 8
+    
 
