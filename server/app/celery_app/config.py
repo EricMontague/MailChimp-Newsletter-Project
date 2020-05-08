@@ -25,10 +25,10 @@ class CeleryConfig:
     CELERY_RESULT_BACKEND = os.environ.get("CELERY_RESULT_BACKEND", "redis://localhost:6379/1")
     CELERY_RESULTS_EXPIRE = 60 * 60 * 24 * 2, #two days
     CELERY_TIMEZONE = "US/Eastern"
-    CELERY_INCLUDE =  ["app.scrapy.performance_scraper.tasks"]
+    CELERY_INCLUDE =  ["app.performance_scraper.performance_scraper.tasks"]
     CELERYBEAT_SCHEDULE = {
         "crawl-every-sunday-morning": {
-            "task": "app.scrapy.performance_scraper.tasks.scheduled_crawl",
+            "task": "app.performance_scraper.performance_scraper.tasks.scheduled_crawl",
             "schedule": crontab(hour=9, minute=0, day_of_week=0),
             "args": SPIDERS
         }
