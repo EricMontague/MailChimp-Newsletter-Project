@@ -138,7 +138,7 @@ api.add_resource(
 )
 api.add_resource(
     CrawlTaskStatusAPI,
-    "/crawl_status/<int:task_id>",
+    "/crawl_status/<task_id>",
     endpoint="crawl_status"
 )
 api.add_resource(
