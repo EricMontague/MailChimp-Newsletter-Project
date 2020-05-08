@@ -4,8 +4,8 @@
 from datetime import datetime, timedelta
 from scrapy.spiders import CrawlSpider
 from scrapy_splash import SplashRequest
-from performance_scraper.items import PerformanceItem, ArtistItem, ImageItem
-from performance_scraper.venues import art_museum_item
+from app.performance_scraper.performance_scraper.items import PerformanceItem, ArtistItem, ImageItem
+from app.performance_scraper.performance_scraper.venues import art_museum_item
 
 
 class ArtMuseumSpider(CrawlSpider):

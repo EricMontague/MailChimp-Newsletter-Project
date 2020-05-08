@@ -4,8 +4,8 @@
 import re
 from datetime import datetime
 from scrapy.spiders import CrawlSpider
-from performance_scraper.items import PerformanceItem, ArtistItem, ImageItem
-from performance_scraper.venues import exuberance_item
+from app.performance_scraper.performance_scraper.items import PerformanceItem, ArtistItem, ImageItem
+from app.performance_scraper.performance_scraper.venues import exuberance_item
 
 
 class ExuberanceSpider(CrawlSpider):

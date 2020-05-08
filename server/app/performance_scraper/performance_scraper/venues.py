@@ -1,7 +1,7 @@
 """This module contains venue items."""
 
 
-from performance_scraper.items import VenueItem
+from app.performance_scraper.performance_scraper.items import VenueItem
 
 
 #Chris' Jazz Cafe

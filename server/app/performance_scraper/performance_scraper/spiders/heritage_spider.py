@@ -3,8 +3,8 @@
 
 from datetime import datetime
 from scrapy.spiders import CrawlSpider
-from performance_scraper.items import PerformanceItem, ArtistItem
-from performance_scraper.venues import heritage_item
+from app.performance_scraper.performance_scraper.items import PerformanceItem, ArtistItem
+from app.performance_scraper.performance_scraper.venues import heritage_item
 
 
 class HeritageSpider(CrawlSpider):

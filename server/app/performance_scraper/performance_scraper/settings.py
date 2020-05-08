@@ -13,7 +13,7 @@ TOKEN_FILE_PATH =  BASEDIR + "/flask_api/token.json"
 
 BOT_NAME = "performance_scraper"
 
-SPIDER_MODULES = ["performance_scraper.spiders"]
+SPIDER_MODULES = ["app.performance_scraper.performance_scraper.spiders"]
 NEWSPIDER_MODULE = "performance_scraper.spiders"
 
 

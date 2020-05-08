@@ -3,8 +3,8 @@
 
 from datetime import datetime, timedelta
 from scrapy.spiders import CrawlSpider
-from performance_scraper.venues import chris_jazz_item
-from performance_scraper.items import ArtistItem, PerformanceItem, ImageItem
+from app.performance_scraper.performance_scraper.venues import chris_jazz_item
+from app.performance_scraper.performance_scraper.items import ArtistItem, PerformanceItem, ImageItem
 
 
 class ChrisJazzCafeSpider(CrawlSpider):

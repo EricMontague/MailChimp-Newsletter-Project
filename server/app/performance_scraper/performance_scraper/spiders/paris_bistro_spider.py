@@ -3,8 +3,8 @@
 
 from datetime import datetime, date
 from scrapy.spiders import CrawlSpider
-from performance_scraper.items import PerformanceItem, ArtistItem, ImageItem
-from performance_scraper.venues import paris_bistro_item
+from app.performance_scraper.performance_scraper.items import PerformanceItem, ArtistItem, ImageItem
+from app.performance_scraper.performance_scraper.venues import paris_bistro_item
 
 
 class ParisBistroSpider(CrawlSpider):

@@ -4,8 +4,8 @@
 from datetime import datetime, timedelta
 from scrapy.spiders import CrawlSpider
 from scrapy_splash import SplashRequest
-from performance_scraper.items import ArtistItem, PerformanceItem
-from performance_scraper.venues import time_item
+from app.performance_scraper.performance_scraper.items import ArtistItem, PerformanceItem
+from app.performance_scraper.performance_scraper.venues import time_item
 
 
 # Time's website uses a Wix widget that uses javascript to display events dynamically

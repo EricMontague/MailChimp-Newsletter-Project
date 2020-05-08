@@ -5,8 +5,8 @@ from datetime import datetime, timedelta
 from scrapy.spiders import CrawlSpider
 from scrapy_splash import SplashRequest
 from scrapy.exceptions import CloseSpider
-from performance_scraper.items import PerformanceItem, ArtistItem, ImageItem
-from performance_scraper.venues import kimmel_center_item
+from app.performance_scraper.performance_scraper.items import PerformanceItem, ArtistItem, ImageItem
+from app.performance_scraper.performance_scraper.venues import kimmel_center_item
 
 
 class KimmelCenterSpider(CrawlSpider):

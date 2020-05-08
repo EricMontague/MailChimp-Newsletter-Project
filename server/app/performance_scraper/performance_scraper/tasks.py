@@ -3,15 +3,13 @@ programatically."""
 
 
 import traceback
-from scrapy.spiderloader import SpiderLoader
 from scrapy.exceptions import DropItem, CloseSpider
 from scrapy.crawler import CrawlerProcess
 from scrapy.utils.project import get_project_settings
+from app.celery_app import celery_app 
 
 
 SETTINGS = get_project_settings()
-SPIDERS = SpiderLoader(SETTINGS).list()
-from app.celery_app import celery_app #imported here to prevent a circular imports
 
 
 @celery_app.task(bind=True, throws=(DropItem, CloseSpider))
