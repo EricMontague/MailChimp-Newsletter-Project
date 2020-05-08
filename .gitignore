@@ -2,3 +2,4 @@ __pycache__
 venv
 .*
 *.rdb
+manual_testing.py
