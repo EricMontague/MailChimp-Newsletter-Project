@@ -5,8 +5,8 @@ as Celery tasks.
 
 from flask import request, url_for
 from flask_restful import Resource
-from app.scrapy.performance_scraper.tasks import start_crawl
-# from app.scrapy.performance_scraper import SPIDERS
+from app.performance_scraper.performance_scraper.tasks import start_crawl
+# from app.performance_scraper.performance_scraper import SPIDERS
 from celery import group
 from http import HTTPStatus
 
