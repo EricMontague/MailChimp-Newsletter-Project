@@ -3,6 +3,7 @@ as Celery tasks.
 """
 
 
+import time
 from flask import request, url_for
 from flask_restful import Resource
 from app.performance_scraper.performance_scraper.tasks import start_crawl
@@ -53,14 +54,17 @@ class CrawlTaskAPI(Resource):
                 "invalid_spider": spider_name
             }, HTTPStatus.BAD_REQUEST
         async_result = start_crawl.delay(spider_name)
+        #delay needed to allow for the custom task state to be read
+        time.sleep(5)
         response = {}
         response["message"] = "Single crawl started."
         response["uri"] = url_for("api.crawl_status", task_id=async_result.id)
-        response["task_info"] = {
-            "status": async_result.status,
-            "spider_name": spider_name
-        }
-        return response, HTTPStatus.ACCEPTED
+        response["status"] = async_result.status
+        response["spider"] = spider_name
+        http_status = HTTPStatus.ACCEPTED
+        if response["task_info"]["status"] == "FAILURE":
+            http_status = HTTPStatus.INTERNAL_SERVER_ERROR
+        return response, http_status
 
 
 class CrawlTaskStatusAPI(Resource):
@@ -121,18 +125,22 @@ class CrawlGroupAPI(Resource):
             [start_crawl.signature(args=(spider,)) for spider in valid_spiders]
         )
         group_result = crawl_group()
+        #delay needed to allow for the custom task state to be read
+        time.sleep(5)
         response = {}
         response["message"] = "Group crawl started."
         response["num_spiders_executed"] = len(valid_spiders)
         response["invalid_spiders"] = invalid_spiders
-        response["tasks"] = [
-            {
+        response["tasks"] = []
+        http_status = HTTPStatus.ACCEPTED
+        for result in group_result.result:
+            response["tasks"].append({
                 "status": result.status,
-                "spider_name": result.info.get("spider_name"),
+                "spider": result.info.get("spider"),
                 "uri": url_for("api.crawl_status", task_id=result.id),
-            }
-            for result in group_result.results
-        ]
-        return response, HTTPStatus.ACCEPTED
+            })
+            if result.status == "FAILURE":
+                http_status = HTTPStatus.INTERNAL_SERVER_ERROR
+        return response, http_status
 
 
