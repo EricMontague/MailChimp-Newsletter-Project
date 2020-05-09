@@ -33,6 +33,9 @@ class CeleryConfig:
             "args": SPIDERS
         }
     }
-    CELERY_PREFETCH_MULTIPLIER = 8
+    CELERYD_CONCURRENCY = 8
+    CELERYD_PREFETCH_MULTIPLIER = 0
+    CELERYD_MAX_TASKS_PER_CHILD = 1
+    
     
 
