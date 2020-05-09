@@ -4,7 +4,7 @@
 import requests
 import json
 from http import HTTPStatus
-from performance_scraper.flask_api.exceptions import FlaskAPIException
+from app.performance_scraper.performance_scraper.flask_api.exceptions import FlaskAPIException
 
 
 class FlaskAPIClient:

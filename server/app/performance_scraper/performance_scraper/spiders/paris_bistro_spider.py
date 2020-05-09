@@ -53,7 +53,7 @@ class ParisBistroSpider(CrawlSpider):
     def format_date(self, date_string):
         """Format the given date so that it is in the format month/day/year """
         split_date = date_string.split()
-        month = datetime.strptime(split_date[-2], "%B").strftime("%B")
+        month = datetime.strptime(split_date[-2], "%B").strftime("%m")
         number_day = split_date[-1] #numeric day. e.g. 13
         year = datetime.now().year.strftime("%Y")
         return month + "/" + number_day + "/" + year

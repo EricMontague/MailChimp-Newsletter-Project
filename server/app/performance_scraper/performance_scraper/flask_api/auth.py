@@ -7,7 +7,7 @@ import requests
 import json
 from http import HTTPStatus
 from scrapy.utils.project import get_project_settings
-from performance_scraper.flask_api.exceptions import FlaskAPIException
+from app.performance_scraper.performance_scraper.flask_api.exceptions import FlaskAPIException
 
 
 class AuthManager:

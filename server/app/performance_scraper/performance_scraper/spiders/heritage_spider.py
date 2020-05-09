@@ -48,7 +48,7 @@ class HeritageSpider(CrawlSpider):
         date so that it is in the format month/day/year hour:minute.
         """
         split_date = date_string.split()
-        month = datetime.strptime(split_date[-2], "%B").strftime("%B")
+        month = datetime.strptime(split_date[-2], "%B").strftime("%m")
         number_day = split_date[-1][:-2] #numeric day. e.g. 13
         year = datetime.now().year.strftime("%Y")
         #convert time into military time

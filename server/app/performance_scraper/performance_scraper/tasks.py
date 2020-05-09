@@ -3,14 +3,17 @@ programatically."""
 
 
 import traceback
-import time
 from scrapy.exceptions import DropItem, CloseSpider
-from scrapy.crawler import CrawlerProcess
+from scrapy.crawler import CrawlerProcess, CrawlerRunner
 from scrapy.utils.project import get_project_settings
+from scrapy.utils.log import configure_logging
+from twisted.internet import reactor
 from app.celery_app import celery_app 
 from celery.exceptions import Ignore
+from celery import states
 
 
+configure_logging()
 SETTINGS = get_project_settings()
 
 
@@ -21,15 +24,26 @@ def start_crawl(self, spider):
     """
     self.update_state(
         state="PROGRESS",
-        meta={"spider_name": spider}
+        meta={"spider": spider}
     )
-    #need a delay to allow the api to be able to read the task state and
-    #spider name before the task is finished
-    time.sleep(60)
-    process = CrawlerProcess(SETTINGS)
-    process.crawl(spider)
-    process.start()
-    raise Ignore()
+    try:
+        runner = CrawlerRunner(SETTINGS)
+        defferred = runner.crawl(spider)
+        defferred.addBoth(lambda x: reactor.stop())
+        reactor.run()
+    except Exception as ex:
+        self.update_state(
+            state=states.FAILURE,
+            meta={
+                "exc_type": type(ex).__name__,
+                "exc_message": " ".join(traceback.format_exc().split('\n')),
+                "spider": spider
+            })
+        raise Ignore()
+    # process = CrawlerProcess(SETTINGS)
+    # process.crawl(spider)
+    # process.start()
+    
 
 
 @celery_app.task(throws=(DropItem, CloseSpider))

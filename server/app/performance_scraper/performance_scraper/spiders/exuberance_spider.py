@@ -87,7 +87,7 @@ class ExuberanceSpider(CrawlSpider):
         for month in months:
             index = datetime_string.find(month)
             if index != - 1:
-                num_month += str(datetime.strptime(month, "%B").month)
+                num_month += datetime.strptime(month, "%B").strftime("%m")
         return num_month
 
     def format_time(self, time_string, period):

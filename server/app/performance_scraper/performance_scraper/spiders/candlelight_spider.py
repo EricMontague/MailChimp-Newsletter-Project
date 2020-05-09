@@ -43,7 +43,7 @@ class CandlelightSpider(CrawlSpider):
     def format_date(self, date_string):
         """Format the given date so that it is in the format month/day/year """
         string_month, day = date_string.split()
-        month = datetime.strptime(string_month, "%B").strftime("%B")
-        year = datetime.now().strftime("%B")
+        month = datetime.strptime(string_month, "%B").strftime("%m")
+        year = datetime.now().strftime("%Y")
         return month + "/" + day + "/" + year
 

@@ -14,7 +14,7 @@ TOKEN_FILE_PATH =  BASEDIR + "/flask_api/token.json"
 BOT_NAME = "performance_scraper"
 
 SPIDER_MODULES = ["app.performance_scraper.performance_scraper.spiders"]
-NEWSPIDER_MODULE = "performance_scraper.spiders"
+NEWSPIDER_MODULE = "app.performance_scraper.performance_scraper.spiders"
 
 
 ROBOTSTXT_OBEY = True
@@ -47,7 +47,7 @@ DOWNLOADER_MIDDLEWARES = {
    "scrapy_splash.SplashCookiesMiddleware": 723,
    "scrapy_splash.SplashMiddleware": 725,
    "scrapy.downloadermiddlewares.httpcompression.HttpCompressionMiddleware": 810,
-   "performance_scraper.middlewares.PerformanceScraperDownloaderMiddleware": 543,
+   "app.performance_scraper.performance_scraper.middlewares.PerformanceScraperDownloaderMiddleware": 543,
 }
 
 SPLASH_URL = "http://0.0.0.0:8050"
@@ -57,8 +57,8 @@ HTTPCACHE_STORAGE = "scrapy_splash.SplashAwareFSCacheStorage"
 
 # Configure item pipelines
 ITEM_PIPELINES = {
-   "performance_scraper.pipelines.ArtistImagePipeline": 1,
-   "performance_scraper.pipelines.APIPipeline": 300
+   "app.performance_scraper.performance_scraper.pipelines.ArtistImagePipeline": 1,
+   "app.performance_scraper.performance_scraper.pipelines.APIPipeline": 300
 }
 
 IMAGES_STORE = BASEDIR + "/artist_images"

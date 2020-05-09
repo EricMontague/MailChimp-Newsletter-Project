@@ -5,9 +5,9 @@ from http import HTTPStatus
 from scrapy.exceptions import CloseSpider, DropItem
 from scrapy.pipelines.images import ImagesPipeline
 from scrapy.http import Request
-from performance_scraper.flask_api.api_client import FlaskAPIClient
-from performance_scraper.flask_api.auth import AuthManager
-from performance_scraper.flask_api.exceptions import FlaskAPIException
+from app.performance_scraper.performance_scraper.flask_api.api_client import FlaskAPIClient
+from app.performance_scraper.performance_scraper.flask_api.auth import AuthManager
+from app.performance_scraper.performance_scraper.flask_api.exceptions import FlaskAPIException
 
 
 class APIPipeline(object):
@@ -33,7 +33,6 @@ class APIPipeline(object):
         """Send scraped data to the Flask API to be stored."""
         if not performance_item:
             raise DropItem("Performance Item is Empty")
-        
         venue_item = performance_item.pop("venue")
         artist_item = performance_item.pop("artist")
         image_item = artist_item.pop("image", None)
