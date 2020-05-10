@@ -62,7 +62,7 @@ class CrawlTaskAPI(Resource):
         response["status"] = async_result.status
         response["spider"] = spider_name
         http_status = HTTPStatus.ACCEPTED
-        if response["task_info"]["status"] == "FAILURE":
+        if response["status"] == "FAILURE":
             http_status = HTTPStatus.INTERNAL_SERVER_ERROR
         return response, http_status
 
@@ -126,14 +126,14 @@ class CrawlGroupAPI(Resource):
         )
         group_result = crawl_group()
         #delay needed to allow for the custom task state to be read
-        time.sleep(5)
+        time.sleep(10)
         response = {}
         response["message"] = "Group crawl started."
         response["num_spiders_executed"] = len(valid_spiders)
         response["invalid_spiders"] = invalid_spiders
         response["tasks"] = []
         http_status = HTTPStatus.ACCEPTED
-        for result in group_result.result:
+        for result in group_result.results:
             response["tasks"].append({
                 "status": result.status,
                 "spider": result.info.get("spider"),
