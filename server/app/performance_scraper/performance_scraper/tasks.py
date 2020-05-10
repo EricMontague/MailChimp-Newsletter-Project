@@ -3,7 +3,6 @@ programatically."""
 
 
 import traceback
-from scrapy.exceptions import DropItem, CloseSpider
 from scrapy.crawler import CrawlerProcess, CrawlerRunner
 from scrapy.utils.project import get_project_settings
 from scrapy.utils.log import configure_logging
@@ -13,15 +12,15 @@ from celery.exceptions import Ignore
 from celery import states
 
 
-configure_logging()
 SETTINGS = get_project_settings()
 
 
-@celery_app.task(bind=True, throws=(DropItem, CloseSpider))
+@celery_app.task(bind=True)
 def start_crawl(self, spider):
     """Start a crawl using the given spider's name
     passed as a string.
     """
+    configure_logging()
     self.update_state(
         state="PROGRESS",
         meta={"spider": spider}
@@ -40,13 +39,9 @@ def start_crawl(self, spider):
                 "spider": spider
             })
         raise Ignore()
-    # process = CrawlerProcess(SETTINGS)
-    # process.crawl(spider)
-    # process.start()
+
     
-
-
-@celery_app.task(throws=(DropItem, CloseSpider))
+@celery_app.task
 def scheduled_crawl(spiders):
     """Start the weekly scheduled crawl, using all spiders."""
     process = CrawlerProcess(SETTINGS)
