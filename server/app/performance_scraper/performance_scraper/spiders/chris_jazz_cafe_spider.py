@@ -3,6 +3,7 @@
 
 from datetime import datetime, timedelta
 from scrapy.spiders import CrawlSpider
+from scrapy import Request
 from app.performance_scraper.performance_scraper.venues import chris_jazz_item
 from app.performance_scraper.performance_scraper.items import ArtistItem, PerformanceItem, ImageItem
 
@@ -23,13 +24,13 @@ class ChrisJazzCafeSpider(CrawlSpider):
             # will uncomment when running the actual scraper
             # if datetime_object >= datetime.now() + timedelta(days=1) \
             #         and datetime_object <= datetime.now() + timedelta(days=14):
-            event_links = event.css("h3.el-header a")
-            yield from response.follow_all(
-                event_links,
+            event_id = event.css("h3.el-header a").attrib["href"].split("/")[2]
+            yield Request(
+                response.url + "/" + event_id,
                 callback=self.parse_event,
-                cb_kwargs={"date": date},
+                cb_kwargs={"date": date}
             )
-
+        
     def parse_event(self, response, date):
         """Parse the individual event's page for information and 
         yield that performance item.
