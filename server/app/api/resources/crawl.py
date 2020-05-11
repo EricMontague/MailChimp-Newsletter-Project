@@ -7,22 +7,9 @@ import time
 from flask import request, url_for
 from flask_restful import Resource
 from app.performance_scraper.performance_scraper.tasks import start_crawl
-# from app.performance_scraper.performance_scraper import SPIDERS
+from app.performance_scraper.performance_scraper.spiders import SPIDERS
 from celery import group
 from http import HTTPStatus
-
-
-# hard coded until I can find a way to dynamically retrieve these
-SPIDERS = [
-    'candlelight', 
-    'chris_jazz_cafe', 
-    'exuberance', 
-    'heritage', 
-    'kimmel_center',
-    'paris_bistro', 
-    'art_museum', 
-    'time'
-]
 
 
 SPIDER_NAMES = set(SPIDERS)
