@@ -3,19 +3,7 @@
 
 import os
 from celery.schedules import crontab
-# from app.scrapy.performance_scraper import SPIDERS
-
-# hard coded until I can find a way to dynamically retrieve these
-SPIDERS = [
-    'candlelight', 
-    'chris_jazz_cafe', 
-    'exuberance', 
-    'heritage', 
-    'kimmel_center',
-    'paris_bistro', 
-    'art_museum', 
-    'time'
-]
+from app.performance_scraper.performance_scraper.spiders import SPIDERS
 
 
 class CeleryConfig:
@@ -29,7 +17,7 @@ class CeleryConfig:
     CELERYBEAT_SCHEDULE = {
         "crawl-every-sunday-morning": {
             "task": "app.performance_scraper.performance_scraper.tasks.scheduled_crawl",
-            "schedule": crontab(hour=9, minute=0, day_of_week=0),
+            "schedule": crontab(hour=16, minute=5, day_of_week=0),
             "args": SPIDERS
         }
     }
