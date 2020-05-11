@@ -3,3 +3,4 @@ venv
 .*
 *.rdb
 manual_testing.py
+celerybeat-schedule.db
