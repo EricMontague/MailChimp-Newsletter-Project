@@ -42,7 +42,7 @@ def start_crawl(self, spider):
 
     
 @celery_app.task
-def scheduled_crawl(spiders):
+def scheduled_crawl(*spiders):
     """Start the weekly scheduled crawl, using all spiders."""
     process = CrawlerProcess(SETTINGS)
     for spider in spiders:
