@@ -49,7 +49,7 @@ api.add_resource(
     ArtistListAPI, 
     "/artists", 
     resource_class_kwargs={"schema": ArtistSchema()},
-    endpoint="artist_list"
+    endpoint="artists"
 )
 api.add_resource(
     ArtistAPI, 
@@ -70,7 +70,7 @@ api.add_resource(
     ArtistImageListAPI,
     "/artists/<int:artist_id>/images",
     resource_class_kwargs={"schema": ImageSchema()},
-    endpoint="image_list"
+    endpoint="images"
 )
 
 #performance resources
@@ -78,7 +78,7 @@ api.add_resource(
     PerformanceListAPI,
     "/performances",
     resource_class_kwargs={"schema": PerformanceSchema()},
-    endpoint="performance_list"
+    endpoint="performances"
 )
 api.add_resource(
     PerformanceAPI,
@@ -90,7 +90,7 @@ api.add_resource(
     ArtistPerformanceListAPI,
     "/artists/<int:artist_id>/performances",
     resource_class_kwargs={"schema": PerformanceSchema()},
-    endpoint="artist_performance_list"
+    endpoint="artist_performances"
 )
 
 
@@ -99,7 +99,7 @@ api.add_resource(
     UserListAPI,
     "/users",
     resource_class_kwargs={"schema": UserSchema()},
-    endpoint="user_list"
+    endpoint="users"
 )
 api.add_resource(
     UserAPI,
@@ -114,7 +114,7 @@ api.add_resource(
     VenueListAPI,
     "/venues",
     resource_class_kwargs={"schema": VenueSchema()},
-    endpoint="venue_list"
+    endpoint="venues"
 )
 api.add_resource(
     VenueAPI,
