@@ -27,7 +27,7 @@ class PerformanceSchema(ma.SQLAlchemySchema):
     _links = ma.Hyperlinks(
         {
             "uri": ma.URLFor("api.performance", performance_id="<id>"),
-            "collection": ma.URLFor("api.performance_list"),
+            "collection": ma.URLFor("api.performances"),
         }
     )
 

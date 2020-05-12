@@ -18,10 +18,10 @@ class ArtistSchema(ma.SQLAlchemySchema):
     bio = ma.auto_field()
     website = ma.Url()
     performances = ma.List(ma.HyperlinkRelated("api.performance", url_key="performance_id"))
-    image = ma.HyperlinkRelated("api.image_list", url_key="artist_id")
+    image = ma.HyperlinkRelated("api.images", url_key="artist_id")
 
     _links = ma.Hyperlinks({
-        "uri": ma.URLFor("api.artist", artist_id="<id>"), "collection": ma.URLFor("api.artist_list")
+        "uri": ma.URLFor("api.artist", artist_id="<id>"), "collection": ma.URLFor("api.artists")
     })
 
     @validates_schema
