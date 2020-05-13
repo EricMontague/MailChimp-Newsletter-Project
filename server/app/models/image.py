@@ -14,7 +14,7 @@ class Image(db.Model):
     version = db.Column(db.Integer, default=1, nullable=False)
     artist_id = db.Column(db.Integer, db.ForeignKey("artists.id"), nullable=False)
 
-    def __repr__(self):
+    def __str__(self):
         """Return a string representation of the model."""
-        return "<Image: %r >" % self.path
+        return "<Image: %s >" % self.path
 

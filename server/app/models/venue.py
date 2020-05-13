@@ -23,5 +23,5 @@ class Venue(db.Model):
 
     def __repr__(self):
         """Return a string representation of the model."""
-        return "<Venue: %r>" % self.name
+        return "<Venue: %s>" % self.name
         

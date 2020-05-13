@@ -13,6 +13,12 @@ class User(db.Model):
     username = db.Column(db.String(64), index=True, unique=True, nullable=False)
     email = db.Column(db.String(64), unique=True, nullable=False)
     password_hash = db.Column(db.String(128), unique=True, nullable=False)
+    campaigns = db.relationship(
+        "Campaign", 
+        backref="sender", 
+        lazy="dynamic", 
+        cascade="all, delete-orphan"
+    )
 
     @property
     def password(self):
@@ -27,7 +33,7 @@ class User(db.Model):
         """Return True if the correct password is provided by the user."""
         return check_password_hash(self.password_hash, password)
     
-    def __repr__(self):
+    def __str__(self):
         """Return a string representation of the model."""
-        return "<User: %r>" % self.username
+        return "<User: %s>" % self.username
         

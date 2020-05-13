@@ -22,7 +22,7 @@ class Artist(db.Model):
         "Image", backref="artist", lazy=True, uselist=False, cascade="all, delete-orphan"
     )
 
-    def __repr__(self):
+    def __str__(self):
         """Return a string representation of the model."""
-        return "<Artist: %r>" %(self.name)
+        return "<Artist: %s>" % self.name
         

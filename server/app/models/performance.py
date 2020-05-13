@@ -17,7 +17,7 @@ class Performance(db.Model):
     artist_id = db.Column(db.Integer, db.ForeignKey("artists.id"), nullable=False)
     venue_id = db.Column(db.Integer, db.ForeignKey("venues.id"), nullable=False)
 
-    def __repr__(self):
+    def __str__(self):
         """Return a string representation of the model."""
-        return "<Performance: %r>" % self.title
+        return "<Performance: %s>" % self.title
 
