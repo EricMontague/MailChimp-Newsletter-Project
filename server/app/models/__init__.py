@@ -5,5 +5,6 @@ from app.models.artist import Artist
 from app.models.venue import Venue
 from app.models.image import Image
 from app.models.performance import Performance
+from app.models.campaign import Campaign
 
 
