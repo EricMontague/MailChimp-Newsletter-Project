@@ -11,10 +11,7 @@ class Campaign(db.Model):
 
     __tablename__ = "campaigns"
     id = db.Column(db.Integer, primary_key=True)
-    mailchimp_id = db.Column(db.String(64), unique=True, index=True, nullable=False)
-    status = db.Column(db.String(32), nullable=False)
-    created_at = db.Column(db.DateTime, nullable=False)
-    send_time = db.Column(db.DateTime, nullable=False)
+    mailchimp_id = db.Column(db.String(32), unique=True, index=True, nullable=False)
     sender_id = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False)
 
     def __str__(self):
