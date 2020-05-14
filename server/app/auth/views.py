@@ -6,7 +6,7 @@ authorization.
 from http import HTTPStatus
 from flask import Blueprint
 from flask_restful import Api
-from app.auth.resources import LoginAPI, RegisterAPI
+from app.auth.resources import LoginAPI, RegisterAPI, LogoutAPI
 from app.api.schemas import UserSchema
 
 
@@ -15,6 +15,7 @@ api = Api(auth_blueprint)
 
 
 api.add_resource(LoginAPI, "/login", endpoint="login")
+api.add_resource(LogoutAPIm "/logout", endpoint="logout")
 api.add_resource(
     RegisterAPI, "/register",
     resource_class_kwargs={"schema": UserSchema()},
