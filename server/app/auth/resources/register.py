@@ -7,7 +7,6 @@ from flask_restful import Resource
 from app.extensions import db
 from app.models import User
 from marshmallow import ValidationError
-from flask_jwt_extended import create_access_token
 
 
 class RegisterAPI(Resource):
@@ -29,7 +28,4 @@ class RegisterAPI(Resource):
             return {"message": "User already registered."}, HTTPStatus.CONFLICT
         db.session.add(new_user)
         db.session.commit()
-
-        #create acesss token
-        access_token = create_access_token(identity=new_user.id)
-        return {"access_token": access_token}, HTTPStatus.CREATED
+        return {"message": "Registration successful!"}, HTTPStatus.CREATED
