@@ -11,7 +11,7 @@ from flask_jwt_extended import get_raw_jwt
 from http import HTTPStatus
 
 
-class LogoutViewAPI(Resource):
+class LogoutAPI(Resource):
     """View for logging a user out and revoking their token."""
 
     @jwt_required
