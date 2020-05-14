@@ -8,10 +8,10 @@ from flask_restful import Api
 from flask_jwt_extended import verify_jwt_in_request
 from http import HTTPStatus
 from app.mailchimp.resources import CampaignListAPI, CampaignAPI
-from app.mailchimp.scheams import CampaignSchema
+from app.mailchimp.schemas import CampaignSchema
 
 
-mailchimp_blueprint = Blueprint("mailchimp", __name__, url_prefix="api/v1/mailchimp")
+mailchimp_blueprint = Blueprint("mailchimp", __name__, url_prefix="/api/v1/mailchimp")
 api = Api(mailchimp_blueprint)
 
 
@@ -33,7 +33,7 @@ api.add_resource(
     endpoint="campaign"
 )
 api.add_resource(
-    CampaignListAPI
+    CampaignListAPI,
     "/campaigns",
     resource_class_kwargs={"schema": CampaignSchema()},
     endpoint="campaigns"
