@@ -30,6 +30,10 @@ class BaseConfig:
     UPLOAD_DIRECTORY = BASEDIR + "/app/static/artist_images"
     ALLOWED_EXTENSIONS = {"png", "jpg", "jpeg"}
 
+    REDIS_HOST = os.environ.get("REDIS_HOST", "localhost")
+    REDIS_PORT = os.environ.get("REDIS_PORT", 6379)
+    REDIS_DB = os.environ.get("REDIS_DB", 0)
+
     @staticmethod
     def init_app(app):
         pass
