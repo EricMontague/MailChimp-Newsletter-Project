@@ -6,6 +6,7 @@ from flask import request
 from flask_restful import Resource
 from flask_jwt_extended import create_access_token
 from app.models import User
+from app.auth.helpers import cache_token
 
 
 class LoginAPI(Resource):
@@ -25,5 +26,6 @@ class LoginAPI(Resource):
         
         #create access and refresh tokens
         access_token = create_access_token(identity=user.id)
+        cache_token(access_token)
         return {"access_token": access_token}, HTTPStatus.CREATED
         
