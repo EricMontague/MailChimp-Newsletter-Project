@@ -8,7 +8,7 @@ from marshmallow import ValidationError
 from app.models import Venue
 from app.extensions import db
 from http import HTTPStatus
-from app.api.helpers import paginate
+from app.project_helpers import paginate
 
 
 class VenueAPI(Resource):

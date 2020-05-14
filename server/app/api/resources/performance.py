@@ -7,7 +7,8 @@ from marshmallow import ValidationError
 from app.models import Performance, Artist
 from app.extensions import db
 from http import HTTPStatus
-from app.api.helpers import paginate, string_to_date
+from app.project_helpers import paginate
+from app.api.helpers import string_to_date
 
 
 class PerformanceAPI(Resource):
